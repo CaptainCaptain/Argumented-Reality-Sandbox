@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.effect.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.canvas.*?>
+<?import javafx.scene.control.*?>
+<?import java.lang.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tgi.KinectSandbox.GUI_Controller">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
+        <menus>
+          <Menu mnemonicParsing="false" text="Datei">
+            <items>
+              <MenuItem fx:id="menuClose" mnemonicParsing="false" onAction="#close" text="Beenden" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Bearbeiten">
+            <items>
+              <MenuItem fx:id="menuSettings" mnemonicParsing="false" onAction="#settings" text="Einstellungen" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Hilfe">
+            <items>
+              <MenuItem fx:id="menuAbout" mnemonicParsing="false" onAction="#about" text="Über" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
+   </top>
+   <bottom>
+      <TextArea editable="false" prefHeight="110.0" prefWidth="600.0" style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
+   </bottom>
+   <left>
+      <VBox spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btnStart" minWidth="120.0" mnemonicParsing="false" onAction="#start" text="Start">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin></Button>
+            <Button fx:id="btnCali" layoutX="10.0" layoutY="10.0" minWidth="120.0" mnemonicParsing="false" onAction="#calliView" text="Kallibrieren" />
+            <Button fx:id="btnRgbView" layoutX="10.0" layoutY="35.0" minWidth="120.0" mnemonicParsing="false" onAction="#rgbView" text="RGB Ansicht" />
+            <Button fx:id="btn2dView" layoutX="10.0" layoutY="70.0" minWidth="120.0" mnemonicParsing="false" onAction="#view2d" text="2D Ansicht" />
+            <Button fx:id="btn3dDiag" layoutX="10.0" layoutY="100.0" minWidth="120.0" mnemonicParsing="false" onAction="#rgbView" text="3D Diagramm" />
+         </children>
+         <opaqueInsets>
+            <Insets />
+         </opaqueInsets>
+      </VBox>
+   </left>
+   <right>
+      <VBox spacing="5.0" BorderPane.alignment="CENTER">
+         <children>
+            <Button fx:id="btnPlusCont" minWidth="120.0" mnemonicParsing="false" onAction="#contPlus" text="+ Kontrast">
+               <VBox.margin>
+                  <Insets top="5.0" />
+               </VBox.margin></Button>
+            <Button fx:id="btnMinusCont" layoutX="10.0" layoutY="10.0" minWidth="120.0" mnemonicParsing="false" onAction="#contMinus" text="- Kontrast" />
+            <Button layoutX="10.0" layoutY="35.0" minWidth="120.0" mnemonicParsing="false" text="Button" />
+         </children>
+      </VBox>
+   </right>
+   <center>
+      <AnchorPane style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER">
+         <children>
+            <Canvas fx:id="canvas" height="265.0" width="355.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

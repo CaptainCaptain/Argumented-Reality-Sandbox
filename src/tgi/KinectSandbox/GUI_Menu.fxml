@@ -1,0 +1,221 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.ColorPicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Spinner?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="661.0" prefWidth="618.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <tabs>
+            <Tab text="Anzeige">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label prefHeight="60.0" prefWidth="595.0" text="Anzeige Geräte:">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <ChoiceBox fx:id="cbDisplay" onContextMenuRequested="#cbDisplayEvent" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets left="15.0" />
+                                 </VBox.margin>
+                                 <padding>
+                                    <Insets left="400.0" />
+                                 </padding>
+                              </ChoiceBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="2D Ansicht">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox prefHeight="372.0" prefWidth="600.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label prefHeight="60.0" prefWidth="595.0" text="Farbeinstellungen:" underline="true">
+                                 <font>
+                                    <Font name="System Bold" size="18.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label prefHeight="0.0" text="Nah" underline="true" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="10.0" right="40.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Farbe">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="25.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <ColorPicker fx:id="cpClose" onAction="#colorChanged" prefHeight="25.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets left="30.0" />
+                                 </VBox.margin>
+                              </ColorPicker>
+                              <Label text="Beginnend ab">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="25.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox>
+                                 <VBox.margin>
+                                    <Insets left="30.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Spinner fx:id="spClose" initialValue="500" max="999" min="0" prefWidth="100.0">
+      								  <editable>true</editable>
+      							  </Spinner>
+                                    <Label prefHeight="25.0" prefWidth="26.0" text="cm">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <Label text="Mittel" underline="true" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="10.0" top="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Farbe">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="25.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <ColorPicker fx:id="cpMiddle" onAction="#colorChanged" prefHeight="25.0" prefWidth="100.0" VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets left="30.0" />
+                                 </VBox.margin>
+                              </ColorPicker>
+                              <Label text="Beginnend ab">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="25.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox>
+                                 <VBox.margin>
+                                    <Insets left="30.0" top="5.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Spinner fx:id="spMiddle" initialValue="1000" max="1499" min="500" prefWidth="100.0">
+      								  <editable>true</editable>
+      							  </Spinner>
+                                    <Label prefHeight="25.0" prefWidth="26.0" text="cm">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                              <Label text="Fern" underline="true" VBox.vgrow="ALWAYS">
+                                 <font>
+                                    <Font size="17.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="20.0" left="10.0" top="20.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <Label text="Farbe">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="25.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <ColorPicker fx:id="cpFar" onAction="#colorChanged" prefHeight="25.0" prefWidth="100.0">
+                                 <VBox.margin>
+                                    <Insets left="30.0" />
+                                 </VBox.margin>
+                              </ColorPicker>
+                              <Label text="Beginnend ab">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets bottom="5.0" left="25.0" top="10.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <HBox VBox.vgrow="ALWAYS">
+                                 <VBox.margin>
+                                    <Insets left="30.0" top="5.0" />
+                                 </VBox.margin>
+                                 <children>
+                                    <Spinner fx:id="spFar" initialValue="1500" max="3000" min="1001" prefWidth="100.0">
+      								  <editable>true</editable>
+      							  </Spinner>
+                                    <Label prefHeight="25.0" prefWidth="26.0" text="cm">
+                                       <font>
+                                          <Font name="System Bold" size="14.0" />
+                                       </font>
+                                       <HBox.margin>
+                                          <Insets left="5.0" />
+                                       </HBox.margin>
+                                    </Label>
+                                 </children>
+                              </HBox>
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+               </content>
+            </Tab>
+            <Tab text="3D Ansicht">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+            <Tab text="RGB Ansicht">
+               <content>
+                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+               </content>
+            </Tab>
+         </tabs>
+      </TabPane>
+   </children>
+</AnchorPane>

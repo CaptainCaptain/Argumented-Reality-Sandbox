@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.10" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="tgi.KinectSandbox.GUI_Controller" project="Argumented Reality Sandbox" 
+    file="/Argumented Reality Sandbox/src/tgi/KinectSandbox/GUI_Controller.java" binary="false" label="gui_Controller" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="206" y="0"/>    
+    <execution id="2">      
+      <position height="260" width="105" x="5" y="99"/>    
+    </execution>  
+  </object>  
+  <object id="5" language="java" name="tgi.KinectSandbox.Kinect" project="Argumented Reality Sandbox" 
+    file="/Argumented Reality Sandbox/src/tgi/KinectSandbox/Kinect.java" binary="false" label="kinect" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="206" y="0"/>    
+    <execution id="6">      
+      <position height="21" width="82" x="114" y="141"/>    
+    </execution>    
+    <execution id="7">      
+      <position height="21" width="82" x="114" y="173"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="21" width="82" x="114" y="203"/>    
+    </execution>    
+    <execution id="9">      
+      <position height="21" width="82" x="114" y="237"/>    
+    </execution>  
+  </object>  
+  <object id="10" language="java" name="tgi.KinectSandbox.DepthViewFX" project="Argumented Reality Sandbox" 
+    file="/Argumented Reality Sandbox/src/tgi/KinectSandbox/DepthViewFX.java" binary="false" label="depthViewFX" 
+    type="class" autoSize="true">    
+    <position height="-1" width="-1" x="206" y="0"/>    
+    <execution id="11">      
+      <position height="21" width="98" x="200" y="261"/>    
+    </execution>    
+    <execution id="12">      
+      <position height="21" width="98" x="200" y="296"/>    
+    </execution>  
+  </object>  
+  <object id="13" language="java" name="tgi.KinectSandbox.Control" project="Argumented Reality Sandbox" 
+    file="/Argumented Reality Sandbox/src/tgi/KinectSandbox/Control.java" binary="false" label="control" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="206" y="0"/>    
+    <execution id="4">      
+      <position height="218" width="82" x="302" y="120"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="14" operation="setDepthResolution(int,int):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="15" operation="setColorResolution(int,int):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="16" operation="start(int):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="17" operation="setElevationAngle(int):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>  
+  <message id="18" operation="setWidth(int):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="11"/>  
+  </message>  
+  <message id="19" operation="getHeight():int" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>
+</sequence-diagram>

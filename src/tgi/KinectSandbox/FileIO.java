@@ -31,7 +31,7 @@ public class FileIO {
 
 	public void save(SaveData data){
 		Color[] color = data.getColor();
-		double[] minDistance = data.getMinDistance();
+		int[] minDistance = data.getMinDistance();
 		try {
 			FileWriter fw = new FileWriter(settingsFile.getAbsoluteFile());
 			BufferedWriter bw = new BufferedWriter(fw);
@@ -41,7 +41,10 @@ public class FileIO {
 			bw.newLine();
 			for (int i = 0; i < minDistance.length; i++) {
 				bw.write(minDistance[i]+";");
+				System.out.println(minDistance[i]);
 			}
+			bw.newLine();
+			bw.write(data.getLineColor()+";"+data.getLineDistance()+";"+data.getLineWidth()+";"+data.getLineActive());
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -61,12 +64,18 @@ public class FileIO {
 				result = br.readLine();
 				values = result.split(";");
 				String[] minDistanceString = result.split(";");
-				double[] minDistance = new double[minDistanceString.length];
+				int[] minDistance = new int[minDistanceString.length];
 				for (int i = 0; i < values.length; i++) {
-					minDistance[i] = Double.valueOf(minDistanceString[i]);
+					minDistance[i] = Integer.valueOf(minDistanceString[i]);
 				}
+				result = br.readLine();
+				values = result.split(";");
+				Color lineColor = Color.valueOf(values[0]);
+				float lineValue = Float.valueOf(values[1]);
+				float lineWidth = Float.valueOf(values[2]);
+				boolean lineActive = Boolean.getBoolean(values[3]);
 				br.close();
-				SaveData loadedData = new SaveData(color, minDistance);
+				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineValue, lineWidth, lineActive);
 				return loadedData;
 			}
 			br.close();

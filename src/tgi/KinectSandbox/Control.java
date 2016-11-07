@@ -29,7 +29,11 @@ public class Control {
 	private boolean menuActivated;
 	private ObservableList<Choice> monitorChoice = FXCollections.observableArrayList();
 	private Color[] color2D;
+	private Color lineColor;
 	private int[] minDistances;
+	private float lineDistance;
+	private float lineWidth;
+	private Boolean lineActive;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -40,21 +44,40 @@ public class Control {
 		this.irContrastValue = 10;
 		this.rgbOn = false;
 		this.menuActivated = false;
+		this.lineDistance = 0.1f;
+		this.lineWidth = 0.2f;
 		try {
 			SaveData recivedData = fileIO.load();
-			color2D = recivedData.getColor();
-			if (color2D == null || color2D.length < 3) {
-				color2D = new Color[3];
-				color2D[0] = Color.GREEN;
-				color2D[1] = Color.BLUE;
-				color2D[2] = Color.RED;
+			this.color2D = recivedData.getColor();
+			if (this.color2D == null || color2D.length < 3) {
+				this.color2D = new Color[3];
+				this.color2D[0] = Color.GREEN;
+				this.color2D[1] = Color.BLUE;
+				this.color2D[2] = Color.RED;
 			}
-			minDistances = recivedData.getMinDistance();
-			if (minDistances == null) {
-				minDistances[0] = 500;
-				minDistances[1] = 1000;
-				minDistances[2] = 1500;
+			this.minDistances = recivedData.getMinDistance();
+			if (this.minDistances == null) {
+				this.minDistances[0] = 500;
+				this.minDistances[1] = 1000;
+				this.minDistances[2] = 1500;
 			}
+			this.lineColor = recivedData.getLineColor();
+			if (this.lineColor == null) {
+				this.lineColor = new Color(0, 0, 0, 1);
+			}
+			this.lineDistance = recivedData.getLineDistance();
+			if (this.lineDistance == 0) {
+				this.lineDistance = 0.5f;
+			}
+			this.lineWidth = recivedData.getLineWidth();
+			if (this.lineWidth == 0) {
+				this.lineWidth = 0.02f;
+			}
+			this.lineActive = recivedData.getLineActive();
+			if (this.lineActive == null) {
+				this.lineActive = true;
+			}
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -96,15 +119,19 @@ public class Control {
 			for (int j = 8; j < dWidth; j++) {
 				int[] color = new int[3];
 				idx = i * dWidth + j;
-				if (depth[idx] < 0.5f) {
+				if (depth[idx] % 0.5f <0.05f && depth[idx] % 0.5f >-0.05f && depth[idx]!= 0 && lineActive) {
+					color[0] = (int) (lineColor.getRed() * 255);
+					color[1] = (int) (lineColor.getGreen() * 255);
+					color[2] = (int) (lineColor.getBlue() * 255);
+				}else if ( depth[idx] < minDistances[0]/1000.0f) {					
 					color[0] = 0;
 					color[1] = 0;
 					color[2] = 0;
-				} else if (depth[idx] < 1.0f) {
+				} else if (depth[idx] < minDistances[1]/1000.0f) {
 					color[0] = (int) (color2D[0].getRed() * 255);
 					color[1] = (int) (color2D[0].getGreen() * 255);
 					color[2] = (int) (color2D[0].getBlue() * 255);
-				} else if (depth[idx] < 1.5f) {
+				} else if (depth[idx] < minDistances[2]/1000.0f) {
 					color[0] = (int) (color2D[1].getRed() * 255);
 					color[1] = (int) (color2D[1].getGreen() * 255);
 					color[2] = (int) (color2D[1].getBlue() * 255);
@@ -136,6 +163,8 @@ public class Control {
 				for (int j = 0; j < irWidth; j++) {
 					int idx = i * irWidth + j;
 					int[] color = new int[3];
+					color[0] = Integer.valueOf(infrared[idx] / irContrastValue);
+					color[1] = Integer.valueOf(infrared[idx] / irContrastValue);
 					color[2] = Integer.valueOf(infrared[idx] / irContrastValue);
 					bufImg.getRaster().setPixel(j, i, color);
 				}
@@ -219,6 +248,8 @@ public class Control {
 		settingsMenu.show();
 		if (menuController != null) {
 			menuController.setCpBoxes(color2D);
+			menuController.setSpValues(minDistances);
+			menuController.setLine(lineActive, lineColor, lineWidth, lineDistance);
 			if (monitorChoice == null) {
 				System.out.println("null monitor");
 			}
@@ -231,12 +262,33 @@ public class Control {
 		color2D = color;
 	}
 
+	public void setMinDistances(int[] minDistances){
+		this.minDistances = minDistances;
+	}
+	
 	private void saveSettings() {
-		SaveData dataToSave = new SaveData(color2D, minDistances);
+		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive);
 		fileIO.save(dataToSave);
 	}
 
 	public void setMenuController(Menu_Controller mc) {
 		this.menuController = mc;
+	}
+
+	public void setLineColor(Color lineColor) {
+		this.lineColor = lineColor;
+		
+	}
+
+	public void setLineActive(Boolean active) {
+		this.lineActive = active;		
+	}
+
+	public void setLineWidth(float lineWidth) {
+		this.lineWidth = lineWidth;
+	}
+
+	public void setLineDistance(float lineDistance) {
+		this.lineDistance = lineDistance;	
 	}
 }

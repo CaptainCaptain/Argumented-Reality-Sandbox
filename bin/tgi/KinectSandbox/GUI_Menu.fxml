@@ -31,14 +31,27 @@
                                     <Insets left="5.0" />
                                  </VBox.margin>
                               </Label>
-                              <ChoiceBox fx:id="cbDisplay" onContextMenuRequested="#cbDisplayEvent" prefWidth="150.0" VBox.vgrow="ALWAYS">
+                              <ChoiceBox fx:id="cbDisplay" prefHeight="25.0" prefWidth="475.0" VBox.vgrow="ALWAYS">
                                  <VBox.margin>
                                     <Insets left="15.0" />
                                  </VBox.margin>
-                                 <padding>
-                                    <Insets left="400.0" />
-                                 </padding>
                               </ChoiceBox>
+                              <Label prefHeight="60.0" prefWidth="595.0" text="Vollbild Rahmen:">
+                                 <font>
+                                    <Font size="15.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="5.0" />
+                                 </VBox.margin>
+                              </Label>
+                              <CheckBox fx:id="cbFullscreen" mnemonicParsing="false" selected="true" text="Vollbild">
+                                 <font>
+                                    <Font size="14.0" />
+                                 </font>
+                                 <VBox.margin>
+                                    <Insets left="15.0" />
+                                 </VBox.margin>
+                              </CheckBox>
                            </children>
                         </VBox>
                      </children>

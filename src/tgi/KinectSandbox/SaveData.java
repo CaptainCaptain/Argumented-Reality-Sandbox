@@ -10,15 +10,23 @@ public class SaveData {
 	float lineDistance;
 	float lineWidth;
 	private Boolean lineActive;
+	public double displayBoundX;
+	public double displayBoundY;
+	private int display;
+	private boolean fullscreen;
 
 	
-	public SaveData(Color[] color2d, int[] minDistances, Color lineColor, float lineValue, float lineWidth, Boolean lineActive) {
+	public SaveData(Color[] color2d, int[] minDistances, Color lineColor, float lineValue, float lineWidth, Boolean lineActive,int display, double displayBoundX, double displayBoundY, Boolean fullscreen) {
 		this.color = color2d;
 		this.minDistance = minDistances;
 		this.line = lineColor;
 		this.lineDistance = lineValue;
 		this.lineWidth = lineWidth;
 		this.lineActive = lineActive;
+		this.display = display;
+		this.displayBoundX = displayBoundX;
+		this.displayBoundY = displayBoundY;
+		this.fullscreen = fullscreen;
 	}
 
 	public void setColor(Color[] color){
@@ -44,7 +52,23 @@ public class SaveData {
 	public void setLineActive(Boolean lineActive){
 		this.lineActive = lineActive;
 	}
+	
+	public void setDisplayBoundX(double displayBoundX) {
+		this.displayBoundX = displayBoundX;
+	}
+	
+	public void setDisplayBoundY(double displayBoundY) {
+		this.displayBoundY = displayBoundY;
+	}
+	
+	public void setDisplay(int display){
+		this.display = display;
+	}
 
+	public void setFullscreen(boolean fullscreen){
+		this.fullscreen = fullscreen;
+	}
+	
 	public Color[] getColor(){
 		return color;
 	}
@@ -67,6 +91,22 @@ public class SaveData {
 
 	public Boolean getLineActive() {
 		return lineActive;
+	}
+	
+	public double getDisplayBoundX(){
+		return displayBoundX;
+	}
+
+	public double getDisplayBoundY() {
+		return displayBoundY;
+	}
+
+	public int getDisplay() {
+		return display;
+	}
+	
+	public boolean getFullscreen(){
+		return fullscreen;
 	}
 
 }

@@ -41,10 +41,11 @@ public class FileIO {
 			bw.newLine();
 			for (int i = 0; i < minDistance.length; i++) {
 				bw.write(minDistance[i]+";");
-				System.out.println(minDistance[i]);
 			}
 			bw.newLine();
-			bw.write(data.getLineColor()+";"+data.getLineDistance()+";"+data.getLineWidth()+";"+data.getLineActive());
+			bw.write(data.getLineColor()+";"+data.getLineDistance()+";"+data.getLineWidth()+";"+data.getLineActive()+";");
+			bw.newLine();
+			bw.write(data.getDisplay()+";"+data.getDisplayBoundX() +";"+data.getDisplayBoundY()+";"+data.getFullscreen()+";");
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -54,28 +55,47 @@ public class FileIO {
 	public SaveData load() throws IOException{
 		try {
 			BufferedReader br = new BufferedReader(new FileReader(settingsFile.getAbsoluteFile()));
+			
+			
 			String result = br.readLine();
+			
 			if (result != null) {
 				String[] values = result.split(";");
 				Color color[] = new Color[values.length];
 				for (int i = 0; i < color.length; i++) {
 					color[i] = Color.valueOf(values[i]);	
 				}
+				
+				
 				result = br.readLine();
+				
 				values = result.split(";");
 				String[] minDistanceString = result.split(";");
 				int[] minDistance = new int[minDistanceString.length];
 				for (int i = 0; i < values.length; i++) {
 					minDistance[i] = Integer.valueOf(minDistanceString[i]);
 				}
+				
+				
 				result = br.readLine();
+				
 				values = result.split(";");
 				Color lineColor = Color.valueOf(values[0]);
 				float lineValue = Float.valueOf(values[1]);
 				float lineWidth = Float.valueOf(values[2]);
 				boolean lineActive = Boolean.getBoolean(values[3]);
+				
+				
+				result = br.readLine();
+				
+				values = result.split(";");
+				int display = Integer.valueOf(values[0]);
+				double displayBoundX = Double.valueOf(values[1]);
+				double displayBoundY = Double.valueOf(values[2]);
+				boolean fullscreen = Boolean.valueOf(values[3]);
+				
 				br.close();
-				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineValue, lineWidth, lineActive);
+				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineValue, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen);
 				return loadedData;
 			}
 			br.close();

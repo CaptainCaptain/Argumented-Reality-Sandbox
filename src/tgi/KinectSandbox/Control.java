@@ -27,13 +27,20 @@ public class Control {
 	private int irContrastValue;
 	private boolean rgbOn;
 	private boolean menuActivated;
-	private ObservableList<Choice> monitorChoice = FXCollections.observableArrayList();
+	private ObservableList<String> monitorChoice = FXCollections.observableArrayList();
 	private Color[] color2D;
 	private Color lineColor;
 	private int[] minDistances;
 	private float lineDistance;
 	private float lineWidth;
 	private Boolean lineActive;
+	private double displayBoundX;
+	private double displayBoundY;
+	private GraphicsDevice[] gd;
+	private Boolean fullscreen;
+	private int display;
+	private double displayWidth;
+	private double displayHeight;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -77,15 +84,22 @@ public class Control {
 			if (this.lineActive == null) {
 				this.lineActive = true;
 			}
+			this.display = recivedData.getDisplay();
+			this.displayBoundX = recivedData.getDisplayBoundX();
+			this.displayBoundY = recivedData.getDisplayBoundY();
+			this.fullscreen = recivedData.getFullscreen();
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		this.mainCanvesMode = 0;
-		GraphicsDevice[] gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
-		for (int i = 0; i < 3; i++) {
-			monitorChoice.add(new Choice(i, "name lel " + i));
+		gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getScreenDevices();
+		for (int i = 0; i < gd.length; i++) {
+			monitorChoice.add(gd[i].getIDstring());
 		}
+		this.displayWidth = gd[display].getDefaultConfiguration().getBounds().getWidth();
+		this.displayHeight = gd[display].getDefaultConfiguration().getBounds().getHeight();
+		
 	}
 
 	public void start() {
@@ -95,10 +109,7 @@ public class Control {
 		kin.setElevationAngle(0);
 
 		Stage depthStage = new Stage();
-		this.depthMap = new DepthViewFX();
-		depthMap = new DepthViewFX();
-		depthMap.setWidth(kin.getDepthWidth());
-		depthMap.setHeight(kin.getDepthHeight());
+		this.depthMap = new DepthViewFX(displayBoundX, displayBoundY, fullscreen, displayWidth, displayHeight, kin.getDepthWidth(), kin.getDepthHeight());
 		try {
 			this.depthMap.start(depthStage);
 		} catch (Exception e) {
@@ -115,7 +126,7 @@ public class Control {
 		int dWidth = kin.getDepthWidth();
 		int dHeight = kin.getDepthHeight();
 		BufferedImage img = new BufferedImage(dWidth, dHeight, BufferedImage.TYPE_INT_RGB);
-		for (int i = 0; i < 480; i++) {
+		for (int i = 0; i < dHeight; i++) {
 			for (int j = 8; j < dWidth; j++) {
 				int[] color = new int[3];
 				idx = i * dWidth + j;
@@ -145,7 +156,7 @@ public class Control {
 		}
 		Image imgFX = SwingFXUtils.toFXImage(img, null);
 		if (imgFX == null) {
-			System.out.println("null");
+			System.out.println("2D Img null");
 		}
 		depthMap.drawDepth(imgFX);
 		if (mainCanvesMode == 2) {
@@ -245,16 +256,15 @@ public class Control {
 				e.printStackTrace();
 			}
 		}
-		settingsMenu.show();
 		if (menuController != null) {
 			menuController.setCpBoxes(color2D);
 			menuController.setSpValues(minDistances);
 			menuController.setLine(lineActive, lineColor, lineWidth, lineDistance);
-			if (monitorChoice == null) {
-				System.out.println("null monitor");
-			}
 			menuController.cbDisplayAddChoise(monitorChoice);
+			menuController.setDisplayChoise(display);
+			menuController.setCbFullscreenActive(fullscreen);
 		}
+	settingsMenu.show();
 
 	}
 
@@ -267,7 +277,7 @@ public class Control {
 	}
 	
 	private void saveSettings() {
-		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive);
+		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen);
 		fileIO.save(dataToSave);
 	}
 
@@ -290,5 +300,21 @@ public class Control {
 
 	public void setLineDistance(float lineDistance) {
 		this.lineDistance = lineDistance;	
+	}
+
+	public void setDisplay(int display) {
+		this.display = display;
+		displayBoundX = gd[display].getDefaultConfiguration().getBounds().getX();
+		displayBoundY = gd[display].getDefaultConfiguration().getBounds().getY();
+		if (depthMap != null) {
+			depthMap.setDisplay(displayBoundX, displayBoundY, displayWidth, displayHeight);
+		}
+	}
+
+	public void setFullscreen(Boolean fullscreen) {
+		this.fullscreen = fullscreen;
+		if (depthMap != null) {
+			depthMap.setFullscreen(fullscreen);
+		}	
 	}
 }

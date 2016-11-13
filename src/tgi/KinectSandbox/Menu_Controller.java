@@ -24,7 +24,7 @@ public class Menu_Controller {
 	@FXML
 	private ColorPicker cpFar;
 	@FXML
-	private ChoiceBox<Choice> cbDisplay;
+	private ChoiceBox<String> cbDisplay;
 	@FXML
 	private ColorPicker cpLine;
 	@FXML
@@ -41,6 +41,8 @@ public class Menu_Controller {
 	private CheckBox cbLineActive;
 	@FXML
 	private VBox lineVbox;
+	@FXML
+	private CheckBox cbFullscreen;
 
 	private Control control;
 
@@ -73,17 +75,13 @@ public class Menu_Controller {
 	}
 
 	public void setCpBoxes(Color[] colors) {
-		if (cpClose == null) {
-			System.out.println("jupp");
-		}
 		cpClose.setValue(colors[0]);
 		cpMiddle.setValue(colors[1]);
 		cpFar.setValue(colors[2]);
 	}
 
-	public void cbDisplayAddChoise(ObservableList<Choice> list) {
-
-		// cbDisplay.setItems(list);
+	public void cbDisplayAddChoise(ObservableList<String> list) {
+		cbDisplay.getItems().setAll(list);
 	}
 
 	@FXML
@@ -94,11 +92,11 @@ public class Menu_Controller {
 	@FXML
 	public void initialize() {
 		spClose.valueProperty().addListener((obs, oldValue, newValue) -> {
-			System.out.println(spClose.valueProperty().getValue() + "!");
 			spMiddle.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spClose.getValue() + 1,
 					spFar.getValue() - 1, spMiddle.getValue()));
 			sendMinDistances();
 		});
+		
 		spMiddle.valueProperty().addListener((obs, oldValue, newValue) -> {
 			spClose.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(80, spMiddle.getValue() - 1,
 					spClose.getValue()));
@@ -106,23 +104,43 @@ public class Menu_Controller {
 					Integer.MAX_VALUE, spFar.getValue()));
 			sendMinDistances();
 		});
+		
 		spFar.valueProperty().addListener((obs, oldValue, newValue) -> {
 			spMiddle.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spClose.getValue() + 1,
 					spFar.getValue() - 1, spMiddle.getValue()));
 			sendMinDistances();
 		});
+		
 		spLineWidth.valueProperty().addListener((obs, oldValue, newValue) -> {
 			float floatValue = newValue/100;
 			control.setLineWidth(floatValue);
 		});
+		
 		spLineDistance.valueProperty().addListener((obs, oldValue, newValue) -> {
 			float floatValue = newValue/100;
 			control.setLineDistance(floatValue);
 		});
+		
 		cbLineActive.selectedProperty().addListener(new ChangeListener<Boolean>() {
 			@Override
 			public void changed(ObservableValue<? extends Boolean> observable, Boolean oldValue, Boolean newValue) {
 				setVboxLine(newValue);
+			}
+		});
+		
+		cbDisplay.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>(){
+			@Override
+			public void changed(ObservableValue ov, Number oldValue, Number newValue) {
+				if (newValue.intValue() >= 0) {
+					control.setDisplay(newValue.intValue());
+				}
+			}			
+		});		cbDisplay.getSelectionModel().selectFirst();
+		
+		cbFullscreen.selectedProperty().addListener(new ChangeListener<Boolean>() {
+			@Override
+			public void changed(ObservableValue<? extends Boolean> ov, Boolean oldValue, Boolean newValue) {
+				control.setFullscreen(newValue);			
 			}
 		});
 	}
@@ -151,12 +169,20 @@ public class Menu_Controller {
 	}
 
 	public void setLine(Boolean lineActive, Color lineColor, float lineWidth, float lineDistance) {
-		cbLineActive.setDisable(!lineActive);
+		cbLineActive.setSelected(lineActive);
 		cpLine.setValue(lineColor);
 		int lineWidthInt = (int) (lineWidth*100);
 		spLineWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 200, lineWidthInt));
 		int lineDistanceInt = (int) (lineDistance*100);
 		spLineDistance.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 200, lineDistanceInt));
+	}
+
+	public void setCbFullscreenActive(Boolean fullscreen) {
+		cbFullscreen.setSelected(fullscreen);
+	}
+
+	public void setDisplayChoise(int display) {
+		cbDisplay.getSelectionModel().select(display);
 	}
 
 }

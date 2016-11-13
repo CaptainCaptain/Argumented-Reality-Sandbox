@@ -10,9 +10,12 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.event.EventHandler;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class Control {
@@ -214,6 +217,7 @@ public class Control {
 
 	public void setCanvesMode(int mode) {
 		this.mainCanvesMode = mode;
+		this.guiControl.setVboxContent(mainCanvesMode);
 		if (!rgbOn && mode == 1) {
 			rgbOn = true;
 			kin.stop();
@@ -233,6 +237,10 @@ public class Control {
 		} else {
 			this.irContrastValue = pCont;
 		}
+	}
+	
+	public void resetIrContrast(){
+		this.irContrastValue = 10;
 	}
 
 	public int getIrContrast() {
@@ -316,5 +324,14 @@ public class Control {
 		if (depthMap != null) {
 			depthMap.setFullscreen(fullscreen);
 		}	
+	}
+
+	public void showAbout() {
+		Alert alert = new Alert(AlertType.INFORMATION);
+		alert.setTitle("Über Kinect Sandbox");
+		alert.setHeaderText("Kinect Sandbox");
+		alert.setContentText("Ein Projekt von Marcel Heda und Felix Dittrich im Rahmen des Hafner Projekts der Gewerblichen Schule Waiblingen.\n\n\n Verwendete APIs:	\"J4KSDK\"");	
+		alert.show();
+
 	}
 }

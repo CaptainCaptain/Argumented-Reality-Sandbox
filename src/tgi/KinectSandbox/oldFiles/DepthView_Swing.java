@@ -1,4 +1,4 @@
-package tgi.KinectSandbox;
+package tgi.KinectSandbox.oldFiles;
 
 import java.awt.Graphics;
 import java.awt.GraphicsDevice;
@@ -13,11 +13,13 @@ public class DepthView_Swing {
 	private JFrame frame;
 	private int width = 640;
 	private int height = 480;
+	private boolean active;
 	private short[] depth;
 
 	public DepthView_Swing(){
 		frame = new JFrame("Kektus");
 		depth = new short[307200];
+		active = true;
 		for (int i = 0; i < depth.length; i++) {
 			depth[i]=25000;
 		}

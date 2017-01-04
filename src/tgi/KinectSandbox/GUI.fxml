@@ -61,9 +61,9 @@
       </VBox>
    </right>
    <center>
-      <AnchorPane style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER">
+      <AnchorPane fx:id="anchorMainPane" style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER">
          <children>
-            <Canvas fx:id="canvas" height="265.0" width="355.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Canvas fx:id="canvas" height="265.0" onMouseClicked="#canvasClick" width="355.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
          </children>
       </AnchorPane>
    </center>

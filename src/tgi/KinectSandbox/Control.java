@@ -15,7 +15,6 @@ import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
 import javafx.stage.WindowEvent;
 
 public class Control {
@@ -44,6 +43,8 @@ public class Control {
 	private int display;
 	private double displayWidth;
 	private double displayHeight;
+	private Boolean customColors;
+	private VirtualKinect virtKin;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -56,6 +57,7 @@ public class Control {
 		this.menuActivated = false;
 		this.lineDistance = 0.1f;
 		this.lineWidth = 0.2f;
+		this.customColors=false;
 		try {
 			SaveData recivedData = fileIO.load();
 			this.color2D = recivedData.getColor();
@@ -91,7 +93,7 @@ public class Control {
 			this.displayBoundX = recivedData.getDisplayBoundX();
 			this.displayBoundY = recivedData.getDisplayBoundY();
 			this.fullscreen = recivedData.getFullscreen();
-			
+
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -102,7 +104,9 @@ public class Control {
 		}
 		this.displayWidth = gd[display].getDefaultConfiguration().getBounds().getWidth();
 		this.displayHeight = gd[display].getDefaultConfiguration().getBounds().getHeight();
-		
+
+		// this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
+
 	}
 
 	public void start() {
@@ -118,6 +122,7 @@ public class Control {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
+		//this.virtKin.start(); //starten der Virtuellen Kinect
 	}
 
 	public void fillArray() {
@@ -129,32 +134,65 @@ public class Control {
 		int dWidth = kin.getDepthWidth();
 		int dHeight = kin.getDepthHeight();
 		BufferedImage img = new BufferedImage(dWidth, dHeight, BufferedImage.TYPE_INT_RGB);
-		for (int i = 0; i < dHeight; i++) {
-			for (int j = 8; j < dWidth; j++) {
-				int[] color = new int[3];
-				idx = i * dWidth + j;
-				if (depth[idx] % 0.5f <0.05f && depth[idx] % 0.5f >-0.05f && depth[idx]!= 0 && lineActive) {
-					color[0] = (int) (lineColor.getRed() * 255);
-					color[1] = (int) (lineColor.getGreen() * 255);
-					color[2] = (int) (lineColor.getBlue() * 255);
-				}else if ( depth[idx] < minDistances[0]/1000.0f) {					
-					color[0] = 0;
-					color[1] = 0;
-					color[2] = 0;
-				} else if (depth[idx] < minDistances[1]/1000.0f) {
-					color[0] = (int) (color2D[0].getRed() * 255);
-					color[1] = (int) (color2D[0].getGreen() * 255);
-					color[2] = (int) (color2D[0].getBlue() * 255);
-				} else if (depth[idx] < minDistances[2]/1000.0f) {
-					color[0] = (int) (color2D[1].getRed() * 255);
-					color[1] = (int) (color2D[1].getGreen() * 255);
-					color[2] = (int) (color2D[1].getBlue() * 255);
-				} else {
-					color[0] = (int) (color2D[2].getRed() * 255);
-					color[1] = (int) (color2D[2].getGreen() * 255);
-					color[2] = (int) (color2D[2].getBlue() * 255);
+		if(customColors){
+			for (int i = 0; i < dHeight; i++) {
+				for (int j = 8; j < dWidth; j++) {
+					int[] color = new int[3];
+					idx = i * dWidth + j;
+					if (depth[idx] % 0.5f <0.05f && depth[idx] % 0.5f >-0.05f && depth[idx]!= 0 && lineActive) {
+						color[0] = (int) (lineColor.getRed() * 255);
+						color[1] = (int) (lineColor.getGreen() * 255);
+						color[2] = (int) (lineColor.getBlue() * 255);
+					}else if ( depth[idx] < minDistances[0]/1000.0f) {					
+						color[0] = 0;
+						color[1] = 0;
+						color[2] = 0;
+					} else if (depth[idx] < minDistances[1]/1000.0f) {
+						color[0] = (int) (color2D[0].getRed() * 255);
+						color[1] = (int) (color2D[0].getGreen() * 255);
+						color[2] = (int) (color2D[0].getBlue() * 255);
+					} else if (depth[idx] < minDistances[2]/1000.0f) {
+						color[0] = (int) (color2D[1].getRed() * 255);
+						color[1] = (int) (color2D[1].getGreen() * 255);
+						color[2] = (int) (color2D[1].getBlue() * 255);
+					} else {
+						color[0] = (int) (color2D[2].getRed() * 255);
+						color[1] = (int) (color2D[2].getGreen() * 255);
+						color[2] = (int) (color2D[2].getBlue() * 255);
+					}
+					img.getRaster().setPixel(j, i, color);
 				}
-				img.getRaster().setPixel(j, i, color);
+			}
+		}else{
+			for (int i = 0; i < dHeight; i++) {
+				for (int j = 8; j < dWidth; j++) {
+					int[] color = new int[3];
+					idx = i * dWidth + j;
+					if(depth[idx]>=1.2f){
+						color[0]=0;
+						color[1]=0;
+						color[2]=0;
+					}else if(depth[idx]>=1.1f){
+						color[0]=255;
+						color[1]=Math.max(0, (int) (255-((depth[idx] -1.1f)*2833.33f)));
+						color[2]=0;	
+					}else if ( depth[idx] >= 1.0f) {					
+						color[0]=Math.min(255, (int) ((depth[idx] - 1.0f)*2833.3f));
+						color[1]=255;
+						color[2]=0;
+					}
+					else if ( depth[idx] >= 0.9f) {					
+						color[0]=0;
+						color[1]=255;
+						color[2]=Math.max(0, (int) (255-((depth[idx] -0.9f)*2833.33f)));
+					}
+					else if ( depth[idx] >= 0.8f) {					
+						color[0]=0;
+						color[1]=Math.min(255, (int) ((depth[idx] - 0.8f)*2833.3f));
+						color[2]=255;
+					}
+					img.getRaster().setPixel(j, i, color);
+				}
 			}
 		}
 		Image imgFX = SwingFXUtils.toFXImage(img, null);
@@ -238,7 +276,7 @@ public class Control {
 			this.irContrastValue = pCont;
 		}
 	}
-	
+
 	public void resetIrContrast(){
 		this.irContrastValue = 10;
 	}
@@ -272,7 +310,7 @@ public class Control {
 			menuController.setDisplayChoise(display);
 			menuController.setCbFullscreenActive(fullscreen);
 		}
-	settingsMenu.show();
+		settingsMenu.show();
 
 	}
 
@@ -283,7 +321,7 @@ public class Control {
 	public void setMinDistances(int[] minDistances){
 		this.minDistances = minDistances;
 	}
-	
+
 	private void saveSettings() {
 		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen);
 		fileIO.save(dataToSave);
@@ -295,7 +333,7 @@ public class Control {
 
 	public void setLineColor(Color lineColor) {
 		this.lineColor = lineColor;
-		
+
 	}
 
 	public void setLineActive(Boolean active) {

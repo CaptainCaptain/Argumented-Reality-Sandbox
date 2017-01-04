@@ -1,22 +1,16 @@
 package tgi.KinectSandbox;
 
-import java.util.Collection;
-
 import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
-import javafx.scene.control.ChoiceBox;
-import javafx.scene.control.ColorPicker;
 import javafx.scene.control.MenuItem;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.paint.Color;
 import javafx.scene.Node;
 import javafx.scene.canvas.*;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
-import javafx.event.EventHandler;
 
 public class GUI_Controller {
 
@@ -47,6 +41,8 @@ public class GUI_Controller {
 	private MenuItem menuAbout;
 	@FXML
 	private VBox vBoxRight;
+	@FXML
+	private AnchorPane anchorMainPane;
 
 
 	@FXML
@@ -70,7 +66,10 @@ public class GUI_Controller {
 	private void calliView(ActionEvent e){
 		control.setCanvesMode(0);
 	}
-
+	@FXML
+	private void canvasClick(ActionEvent e){
+		System.out.println("klick");
+	}
 	@FXML
 	private void settings(ActionEvent e){
 		control.showSettings();
@@ -145,6 +144,9 @@ public class GUI_Controller {
 		buttonArrays[0] = btnCallibration; buttonArrays[1] = btnRGB; buttonArrays[2] = btn2D; buttonArrays[3] = btn3D;
 		
 		setVboxContent(0);
+		
+		canvas.widthProperty().bind(anchorMainPane.widthProperty().subtract(5));
+		canvas.heightProperty().bind(anchorMainPane.heightProperty().subtract(5));
 	}
 	
 	private void handleVariableButtons(int buttonID) {

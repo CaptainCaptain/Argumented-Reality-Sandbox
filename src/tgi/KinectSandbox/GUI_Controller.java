@@ -4,9 +4,11 @@ import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.scene.Node;
 import javafx.scene.canvas.*;
@@ -42,7 +44,9 @@ public class GUI_Controller {
 	@FXML
 	private VBox vBoxRight;
 	@FXML
-	private AnchorPane anchorMainPane;
+	private Pane mainPane;
+	@FXML
+	private TextArea txaBottom;
 
 
 	@FXML
@@ -67,8 +71,8 @@ public class GUI_Controller {
 		control.setCanvesMode(0);
 	}
 	@FXML
-	private void canvasClick(ActionEvent e){
-		System.out.println("klick");
+	private void canvasClick(MouseEvent e){
+		control.canvasClicked(e.getX(), e.getY(), canvas.getWidth(), canvas.getHeight());
 	}
 	@FXML
 	private void settings(ActionEvent e){
@@ -112,29 +116,29 @@ public class GUI_Controller {
 	public void initialize() {
 		
 		String[] btnCalliText = {"+ Kontrast","- Kontrast", "Reset"};
-		Button[] btnCallibration = new Button[3];
+		Button[] btnCallibration = new Button[btnCalliText.length];
 		for (int i = 0; i < btnCallibration.length; i++) {
 			btnCallibration[i] = new Button(btnCalliText[i]);
 			btnCallibration[i].setUserData(i);
 			btnCallibration[i].setPrefWidth(120.0);
 			btnCallibration[i].setOnMouseClicked((MouseEvent e) ->{handleVariableButtons( (int) (( Node ) e.getSource()).getUserData());});
 		}
-		String[] btnRGBText = {"--Placeholder--","--Placeholder--", "--Placeholder--"};
-		Button[] btnRGB = new Button[3];
+		String[] btnRGBText = {"Bild speichern"};
+		Button[] btnRGB = new Button[btnRGBText.length];
 		for (int i = 0; i < btnRGB.length; i++) {
 			btnRGB[i] = new Button(btnRGBText[i]);
 			btnRGB[i].setUserData(10+i);
 			btnRGB[i].setPrefWidth(120.0);
 		}
 		String[] btn2DText = {"--Placeholder--","--Placeholder--", "--Placeholder--"};
-		Button[] btn2D = new Button [3];
+		Button[] btn2D = new Button [btn2DText.length];
 		for (int i = 0; i < btn2D.length; i++) {
 			btn2D[i] = new Button(btn2DText[i]);
 			btn2D[i].setUserData(20+i);
 			btn2D[i].setPrefWidth(120.0);
 		}
 		String[] btn3DText = {"--Placeholder--","--Placeholder--", "--Placeholder--"};
-		Button[] btn3D = new Button[3];
+		Button[] btn3D = new Button[btn3DText.length];
 		for (int i = 0; i < btn3D.length; i++) {
 			btn3D[i] = new Button(btn3DText[i]);
 			btn3D[i].setUserData(30+i);
@@ -145,8 +149,8 @@ public class GUI_Controller {
 		
 		setVboxContent(0);
 		
-		canvas.widthProperty().bind(anchorMainPane.widthProperty().subtract(5));
-		canvas.heightProperty().bind(anchorMainPane.heightProperty().subtract(5));
+		canvas.widthProperty().bind(mainPane.widthProperty().subtract(5));
+		canvas.heightProperty().bind(mainPane.heightProperty().subtract(5));
 	}
 	
 	private void handleVariableButtons(int buttonID) {
@@ -160,12 +164,19 @@ public class GUI_Controller {
 		case 2:
 			contReset();
 			break;
+		case 11:
+			control.saveRGB();
+			break;
 		default:
 			System.out.println("Fehler im Switch Case Button Handeling!");
 			break;
 		}
-		
+	}	
+	
+	public void txaWrite(String txt){
+		txaBottom.appendText(txt+"\n");
 	}
+		
 	public GUI_Controller(){
 		this.control = new Control(this);
 	}

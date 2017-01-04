@@ -7,8 +7,8 @@
 <?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextArea?>
-<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
 <?import javafx.scene.layout.VBox?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="400.0" minWidth="600.0" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="tgi.KinectSandbox.GUI_Controller">
@@ -34,7 +34,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <TextArea editable="false" prefHeight="110.0" prefWidth="600.0" style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="txaBottom" editable="false" prefHeight="110.0" prefWidth="600.0" style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
    </bottom>
    <left>
       <VBox spacing="5.0" BorderPane.alignment="CENTER">
@@ -61,10 +61,10 @@
       </VBox>
    </right>
    <center>
-      <AnchorPane fx:id="anchorMainPane" style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER">
+      <Pane fx:id="mainPane" style="-fx-border-width: 2; -fx-border-color: black;" BorderPane.alignment="CENTER">
          <children>
-            <Canvas fx:id="canvas" height="265.0" onMouseClicked="#canvasClick" width="355.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+            <Canvas fx:id="canvas" height="265.0" onMouseClicked="#canvasClick" width="355.0" />
          </children>
-      </AnchorPane>
+      </Pane>
    </center>
 </BorderPane>

@@ -265,7 +265,7 @@
                                                       <Insets left="20.0" />
                                                    </HBox.margin>
                                                 </Spinner>
-                                                <Label prefHeight="25.0" prefWidth="26.0" text="px">
+                                                <Label prefHeight="25.0" prefWidth="26.0" text="cm">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>
@@ -290,7 +290,7 @@
                                                       <Insets left="20.0" />
                                                    </HBox.margin>
                                                 </Spinner>
-                                                <Label prefHeight="25.0" prefWidth="26.0" text="px">
+                                                <Label prefHeight="25.0" prefWidth="26.0" text="mm">
                                                    <font>
                                                       <Font name="System Bold" size="14.0" />
                                                    </font>

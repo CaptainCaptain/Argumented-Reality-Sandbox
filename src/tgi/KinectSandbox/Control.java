@@ -3,7 +3,10 @@ package tgi.KinectSandbox;
 import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
+
+import javax.imageio.ImageIO;
 
 import edu.ufl.digitalworlds.j4k.J4KSDK;
 import javafx.collections.FXCollections;
@@ -14,6 +17,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
+import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -45,6 +49,9 @@ public class Control {
 	private double displayHeight;
 	private Boolean customColors;
 	private VirtualKinect virtKin;
+	private float[] depth;
+	private boolean saveRGB;
+	private boolean canvasActive;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -55,9 +62,8 @@ public class Control {
 		this.irContrastValue = 10;
 		this.rgbOn = false;
 		this.menuActivated = false;
-		this.lineDistance = 0.1f;
-		this.lineWidth = 0.2f;
 		this.customColors=false;
+		this.canvasActive=false;
 		try {
 			SaveData recivedData = fileIO.load();
 			this.color2D = recivedData.getColor();
@@ -78,17 +84,18 @@ public class Control {
 				this.lineColor = new Color(0, 0, 0, 1);
 			}
 			this.lineDistance = recivedData.getLineDistance();
-			if (this.lineDistance == 0) {
+			if (this.lineDistance == 0.0) {
 				this.lineDistance = 0.5f;
 			}
 			this.lineWidth = recivedData.getLineWidth();
-			if (this.lineWidth == 0) {
+			if (this.lineWidth == 0.0) {
 				this.lineWidth = 0.02f;
 			}
 			this.lineActive = recivedData.getLineActive();
 			if (this.lineActive == null) {
 				this.lineActive = true;
 			}
+			System.out.println(lineActive);
 			this.display = recivedData.getDisplay();
 			this.displayBoundX = recivedData.getDisplayBoundX();
 			this.displayBoundY = recivedData.getDisplayBoundY();
@@ -105,7 +112,7 @@ public class Control {
 		this.displayWidth = gd[display].getDefaultConfiguration().getBounds().getWidth();
 		this.displayHeight = gd[display].getDefaultConfiguration().getBounds().getHeight();
 
-		// this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
+		 this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
 
 	}
 
@@ -122,7 +129,8 @@ public class Control {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		//this.virtKin.start(); //starten der Virtuellen Kinect
+		this.canvasActive = true;
+		this.virtKin.start(); //starten der Virtuellen Kinect
 	}
 
 	public void fillArray() {
@@ -130,28 +138,29 @@ public class Control {
 	}
 
 	public void sendDepth(float[] depth) {
+		this.depth = depth;
 		int idx;
-		int dWidth = kin.getDepthWidth();
-		int dHeight = kin.getDepthHeight();
+		int dWidth = 640;// kin.getDepthWidth();
+		int dHeight = 480;//kin.getDepthHeight();
 		BufferedImage img = new BufferedImage(dWidth, dHeight, BufferedImage.TYPE_INT_RGB);
 		if(customColors){
 			for (int i = 0; i < dHeight; i++) {
 				for (int j = 8; j < dWidth; j++) {
 					int[] color = new int[3];
 					idx = i * dWidth + j;
-					if (depth[idx] % 0.5f <0.05f && depth[idx] % 0.5f >-0.05f && depth[idx]!= 0 && lineActive) {
+					if (depth[idx]*100 % 5f <0.5f && depth[idx]*100 % 5f >-0.5f && depth[idx]!= 0 && lineActive) {
 						color[0] = (int) (lineColor.getRed() * 255);
 						color[1] = (int) (lineColor.getGreen() * 255);
 						color[2] = (int) (lineColor.getBlue() * 255);
-					}else if ( depth[idx] < minDistances[0]/1000.0f) {					
+					}else if ( depth[idx] < minDistances[0]/100.0f) {					
 						color[0] = 0;
 						color[1] = 0;
 						color[2] = 0;
-					} else if (depth[idx] < minDistances[1]/1000.0f) {
+					} else if (depth[idx] < minDistances[1]/100.0f) {
 						color[0] = (int) (color2D[0].getRed() * 255);
 						color[1] = (int) (color2D[0].getGreen() * 255);
 						color[2] = (int) (color2D[0].getBlue() * 255);
-					} else if (depth[idx] < minDistances[2]/1000.0f) {
+					} else if (depth[idx] < minDistances[2]/100.0f) {
 						color[0] = (int) (color2D[1].getRed() * 255);
 						color[1] = (int) (color2D[1].getGreen() * 255);
 						color[2] = (int) (color2D[1].getBlue() * 255);
@@ -168,7 +177,12 @@ public class Control {
 				for (int j = 8; j < dWidth; j++) {
 					int[] color = new int[3];
 					idx = i * dWidth + j;
-					if(depth[idx]>=1.2f){
+					if (depth[idx]*100 % lineDistance < lineWidth && depth[idx]*100 % lineDistance >-lineWidth && depth[idx]!= 0 && lineActive) {
+						color[0] = (int) (lineColor.getRed() * 255);
+						color[1] = (int) (lineColor.getGreen() * 255);
+						color[2] = (int) (lineColor.getBlue() * 255);
+					}
+					else if(depth[idx]>=1.2f){
 						color[0]=0;
 						color[1]=0;
 						color[2]=0;
@@ -177,7 +191,7 @@ public class Control {
 						color[1]=Math.max(0, (int) (255-((depth[idx] -1.1f)*2833.33f)));
 						color[2]=0;	
 					}else if ( depth[idx] >= 1.0f) {					
-						color[0]=Math.min(255, (int) ((depth[idx] - 1.0f)*2833.3f));
+						color[0]=Math.min(255, (int) ((depth[idx] - 1.0f)*2833.33f));
 						color[1]=255;
 						color[2]=0;
 					}
@@ -188,7 +202,7 @@ public class Control {
 					}
 					else if ( depth[idx] >= 0.8f) {					
 						color[0]=0;
-						color[1]=Math.min(255, (int) ((depth[idx] - 0.8f)*2833.3f));
+						color[1]=Math.min(255, (int) ((depth[idx] - 0.8f)*2833.33f));
 						color[2]=255;
 					}
 					img.getRaster().setPixel(j, i, color);
@@ -246,6 +260,18 @@ public class Control {
 			bufImg.setRGB(0, 0, fWidth, fHeight, color, 0, fWidth);
 			Image imgFX = SwingFXUtils.toFXImage(bufImg, null);
 			guiControl.drawImg(imgFX);
+			if(saveRGB){
+				FileChooser saver = new FileChooser();
+				saver.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG Datei (*.png)", "*.png"));
+				String saveLocation = System.getProperty("user.dir")+"/img";
+				File pictureFile = new File(saveLocation);
+				try {
+					ImageIO.write(bufImg, "png", pictureFile);
+					guiControl.txaWrite("Speichern erfolgreich! Verzeichniss:");
+				} catch (IOException e) {
+					guiControl.txaWrite("ein Fehler ist während des Speicherns aufgetreten!");
+				}
+			}
 			if (mainCanvesMode != 1) {
 				kin.stop();
 				kin.start(J4KSDK.DEPTH | J4KSDK.INFRARED | J4KSDK.XYZ);
@@ -305,7 +331,9 @@ public class Control {
 		if (menuController != null) {
 			menuController.setCpBoxes(color2D);
 			menuController.setSpValues(minDistances);
+			System.out.println(lineWidth +"   1");
 			menuController.setLine(lineActive, lineColor, lineWidth, lineDistance);
+			System.out.println(lineWidth + "  2");
 			menuController.cbDisplayAddChoise(monitorChoice);
 			menuController.setDisplayChoise(display);
 			menuController.setCbFullscreenActive(fullscreen);
@@ -325,6 +353,7 @@ public class Control {
 	private void saveSettings() {
 		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen);
 		fileIO.save(dataToSave);
+		System.out.println(lineWidth);
 	}
 
 	public void setMenuController(Menu_Controller mc) {
@@ -342,10 +371,12 @@ public class Control {
 
 	public void setLineWidth(float lineWidth) {
 		this.lineWidth = lineWidth;
+		System.out.println("width: "+lineWidth);
 	}
 
 	public void setLineDistance(float lineDistance) {
 		this.lineDistance = lineDistance;	
+		System.out.println("dist: "+ lineDistance);
 	}
 
 	public void setDisplay(int display) {
@@ -371,5 +402,20 @@ public class Control {
 		alert.setContentText("Ein Projekt von Marcel Heda und Felix Dittrich im Rahmen des Hafner Projekts der Gewerblichen Schule Waiblingen.\n\n\n Verwendete APIs:	\"J4KSDK\"");	
 		alert.show();
 
+	}
+	
+	public void canvasClicked(double x, double y, double canvasWidth, double canvasHeight){//Fehlerhaft?
+		if(canvasActive){
+		double divisorX = Math.max(1,canvasWidth/640);
+		double divisorY = Math.max(1, canvasHeight/480);
+		
+		int i = (int) (y/divisorY*640+x/divisorX);
+		guiControl.txaWrite("Entfernung zum Sensor: "+depth[i]*100+" cm");
+		}
+	}
+
+	public void saveRGB() {
+		this.saveRGB = true;
+		
 	}
 }

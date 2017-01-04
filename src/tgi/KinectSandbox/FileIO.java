@@ -82,8 +82,7 @@ public class FileIO {
 				Color lineColor = Color.valueOf(values[0]);
 				float lineValue = Float.valueOf(values[1]);
 				float lineWidth = Float.valueOf(values[2]);
-				boolean lineActive = Boolean.getBoolean(values[3]);
-				
+				boolean lineActive = Boolean.valueOf(values[3]);
 				
 				result = br.readLine();
 				

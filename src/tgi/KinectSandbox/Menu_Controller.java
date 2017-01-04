@@ -110,12 +110,12 @@ public class Menu_Controller {
 		});
 		
 		spLineWidth.valueProperty().addListener((obs, oldValue, newValue) -> {
-			float floatValue = newValue/100;
+			float floatValue = newValue/100.0f;
 			control.setLineWidth(floatValue);
 		});
 		
 		spLineDistance.valueProperty().addListener((obs, oldValue, newValue) -> {
-			float floatValue = newValue/100;
+			float floatValue = newValue/10.0f;
 			control.setLineDistance(floatValue);
 		});
 		

@@ -14,19 +14,23 @@ public class SaveData {
 	public double displayBoundY;
 	private int display;
 	private boolean fullscreen;
+	private Boolean depthLayersActive;
+	private float gradientBeginning;
 
 	
-	public SaveData(Color[] color2d, int[] minDistances, Color lineColor, float lineValue, float lineWidth, Boolean lineActive,int display, double displayBoundX, double displayBoundY, Boolean fullscreen) {
+	public SaveData(Color[] color2d, int[] minDistances, Color lineColor, float lineDistance, float lineWidth, Boolean lineActive,int display, double displayBoundX, double displayBoundY, Boolean fullscreen, Boolean layersActive, float gradientBeginning) {
 		this.color = color2d;
 		this.minDistance = minDistances;
 		this.line = lineColor;
-		this.lineDistance = lineValue;
+		this.lineDistance = lineDistance;
 		this.lineWidth = lineWidth;
 		this.lineActive = lineActive;
 		this.display = display;
 		this.displayBoundX = displayBoundX;
 		this.displayBoundY = displayBoundY;
 		this.fullscreen = fullscreen;
+		this.depthLayersActive = layersActive;
+		this.gradientBeginning = gradientBeginning;
 	}
 
 	public void setColor(Color[] color){
@@ -41,8 +45,8 @@ public class SaveData {
 		this.line = lineColor;
 	}
 	
-	public void setLineDistance(float lineValue){
-		this.lineDistance = lineValue;
+	public void setLineDistance(float lineDistance){
+		this.lineDistance = lineDistance;
 	}
 	
 	public void setLineWidth(float lineWidth){
@@ -67,6 +71,14 @@ public class SaveData {
 
 	public void setFullscreen(boolean fullscreen){
 		this.fullscreen = fullscreen;
+	}
+	
+	public void setDepthLayersActive(Boolean layersActive){
+		this.depthLayersActive = layersActive;
+	}
+	
+	public void setGradientBeginning(float gradientBeginning){
+		this.gradientBeginning = gradientBeginning;
 	}
 	
 	public Color[] getColor(){
@@ -107,6 +119,14 @@ public class SaveData {
 	
 	public boolean getFullscreen(){
 		return fullscreen;
+	}
+
+	public Boolean getDepthLayersActive() {
+		return depthLayersActive;
+	}
+
+	public float getGradientBeginning() {
+		return gradientBeginning;
 	}
 
 }

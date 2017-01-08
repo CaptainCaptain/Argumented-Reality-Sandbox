@@ -28,7 +28,6 @@ public class Control {
 	private Menu settingsMenu;
 	private FileIO fileIO;
 	private Menu_Controller menuController;
-	private final int layers2D = 3;
 	private int mainCanvesMode; // 0 = Kalli; 1 = RGB; 2 = Depth; 3=3D
 	private int irContrastValue;
 	private boolean rgbOn;
@@ -47,22 +46,22 @@ public class Control {
 	private int display;
 	private double displayWidth;
 	private double displayHeight;
-	private Boolean customColors;
+	private Boolean depthLayersActive;
 	private VirtualKinect virtKin;
 	private float[] depth;
 	private boolean saveRGB;
 	private boolean canvasActive;
+	private float gradientBeginning;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
 		this.kin = new Kinect(this);
 		this.settingsMenu = new Menu();
 		this.settingsMenu.setControl(this);
-		this.fileIO = new FileIO(layers2D);
+		this.fileIO = new FileIO();
 		this.irContrastValue = 10;
 		this.rgbOn = false;
 		this.menuActivated = false;
-		this.customColors=false;
 		this.canvasActive=false;
 		try {
 			SaveData recivedData = fileIO.load();
@@ -95,7 +94,14 @@ public class Control {
 			if (this.lineActive == null) {
 				this.lineActive = true;
 			}
-			System.out.println(lineActive);
+			this.depthLayersActive = recivedData.getDepthLayersActive();
+			if (this.depthLayersActive == null){
+				this.depthLayersActive = true;
+			}
+			this.gradientBeginning = recivedData.getGradientBeginning();
+			if (this.gradientBeginning == 0.0f){
+				this.gradientBeginning = 0.8f;
+			}
 			this.display = recivedData.getDisplay();
 			this.displayBoundX = recivedData.getDisplayBoundX();
 			this.displayBoundY = recivedData.getDisplayBoundY();
@@ -112,7 +118,7 @@ public class Control {
 		this.displayWidth = gd[display].getDefaultConfiguration().getBounds().getWidth();
 		this.displayHeight = gd[display].getDefaultConfiguration().getBounds().getHeight();
 
-		 this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
+//		 this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
 
 	}
 
@@ -130,7 +136,7 @@ public class Control {
 			e.printStackTrace();
 		}
 		this.canvasActive = true;
-		this.virtKin.start(); //starten der Virtuellen Kinect
+//		this.virtKin.start(); //starten der Virtuellen Kinect
 	}
 
 	public void fillArray() {
@@ -140,15 +146,15 @@ public class Control {
 	public void sendDepth(float[] depth) {
 		this.depth = depth;
 		int idx;
-		int dWidth = 640;// kin.getDepthWidth();
-		int dHeight = 480;//kin.getDepthHeight();
+		int dWidth = kin.getDepthWidth();
+		int dHeight = kin.getDepthHeight();
 		BufferedImage img = new BufferedImage(dWidth, dHeight, BufferedImage.TYPE_INT_RGB);
-		if(customColors){
+		if(depthLayersActive){
 			for (int i = 0; i < dHeight; i++) {
 				for (int j = 8; j < dWidth; j++) {
 					int[] color = new int[3];
 					idx = i * dWidth + j;
-					if (depth[idx]*100 % 5f <0.5f && depth[idx]*100 % 5f >-0.5f && depth[idx]!= 0 && lineActive) {
+					if (depth[idx] % lineDistance < lineWidth && depth[idx] % lineDistance > -lineWidth && depth[idx]!= 0 && lineActive) {
 						color[0] = (int) (lineColor.getRed() * 255);
 						color[1] = (int) (lineColor.getGreen() * 255);
 						color[2] = (int) (lineColor.getBlue() * 255);
@@ -177,33 +183,32 @@ public class Control {
 				for (int j = 8; j < dWidth; j++) {
 					int[] color = new int[3];
 					idx = i * dWidth + j;
-					if (depth[idx]*100 % lineDistance < lineWidth && depth[idx]*100 % lineDistance >-lineWidth && depth[idx]!= 0 && lineActive) {
+					if (depth[idx] % lineDistance < lineWidth && depth[idx] % lineDistance > -lineWidth && depth[idx]!= 0 && lineActive && depth[idx] < gradientBeginning + 0.4f) {
 						color[0] = (int) (lineColor.getRed() * 255);
 						color[1] = (int) (lineColor.getGreen() * 255);
 						color[2] = (int) (lineColor.getBlue() * 255);
 					}
-					else if(depth[idx]>=1.2f){
+					else if(depth[idx]>= gradientBeginning + 0.4f){
 						color[0]=0;
 						color[1]=0;
 						color[2]=0;
-					}else if(depth[idx]>=1.1f){
-						color[0]=255;
-						color[1]=Math.max(0, (int) (255-((depth[idx] -1.1f)*2833.33f)));
-						color[2]=0;	
-					}else if ( depth[idx] >= 1.0f) {					
-						color[0]=Math.min(255, (int) ((depth[idx] - 1.0f)*2833.33f));
-						color[1]=255;
-						color[2]=0;
-					}
-					else if ( depth[idx] >= 0.9f) {					
+					}else if(depth[idx]>= gradientBeginning + 0.3f){
 						color[0]=0;
-						color[1]=255;
-						color[2]=Math.max(0, (int) (255-((depth[idx] -0.9f)*2833.33f)));
-					}
-					else if ( depth[idx] >= 0.8f) {					
-						color[0]=0;
-						color[1]=Math.min(255, (int) ((depth[idx] - 0.8f)*2833.33f));
+						color[1]=Math.min(255, (int) (255-(depth[idx] - gradientBeginning + 0.3f)*2550f));
 						color[2]=255;
+					}else if ( depth[idx] >= gradientBeginning + 0.2f) {					
+						color[0]=0;
+						color[1]=255;
+						color[2]=Math.max(0, (int) (((depth[idx] -gradientBeginning + 0.2f)*2550f)));
+					}
+					else if ( depth[idx] >= gradientBeginning + 0.1f) {					
+						color[0]=Math.min(255, (int) (255-(depth[idx] - gradientBeginning + 0.1f)*2550f));
+						color[1]=255;
+						color[2]=0;				}
+					else if ( depth[idx] >= gradientBeginning) {					
+						color[0]=255;
+						color[1]=Math.max(0, (int) (((depth[idx] -gradientBeginning)*2550f)));
+						color[2]=0;
 					}
 					img.getRaster().setPixel(j, i, color);
 				}
@@ -330,13 +335,12 @@ public class Control {
 		}
 		if (menuController != null) {
 			menuController.setCpBoxes(color2D);
-			menuController.setSpValues(minDistances);
-			System.out.println(lineWidth +"   1");
-			menuController.setLine(lineActive, lineColor, lineWidth, lineDistance);
-			System.out.println(lineWidth + "  2");
+			menuController.setSpValues(minDistances, (int) (gradientBeginning*1000));
+			menuController.setLine(lineActive, lineColor, lineWidth*10, lineDistance);
 			menuController.cbDisplayAddChoise(monitorChoice);
 			menuController.setDisplayChoise(display);
 			menuController.setCbFullscreenActive(fullscreen);
+			menuController.setTogglebtns(depthLayersActive);
 		}
 		settingsMenu.show();
 
@@ -351,9 +355,8 @@ public class Control {
 	}
 
 	private void saveSettings() {
-		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen);
+		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen, depthLayersActive, gradientBeginning);
 		fileIO.save(dataToSave);
-		System.out.println(lineWidth);
 	}
 
 	public void setMenuController(Menu_Controller mc) {
@@ -371,12 +374,10 @@ public class Control {
 
 	public void setLineWidth(float lineWidth) {
 		this.lineWidth = lineWidth;
-		System.out.println("width: "+lineWidth);
 	}
 
 	public void setLineDistance(float lineDistance) {
 		this.lineDistance = lineDistance;	
-		System.out.println("dist: "+ lineDistance);
 	}
 
 	public void setDisplay(int display) {
@@ -406,16 +407,28 @@ public class Control {
 	
 	public void canvasClicked(double x, double y, double canvasWidth, double canvasHeight){//Fehlerhaft?
 		if(canvasActive){
-		double divisorX = Math.max(1,canvasWidth/640);
-		double divisorY = Math.max(1, canvasHeight/480);
-		
-		int i = (int) (y/divisorY*640+x/divisorX);
+		int xi = (int) (kin.getDepthWidth()*(x/canvasWidth));
+		int yi = (int) (kin.getDepthHeight()*(y/canvasHeight));
+		int i = yi*kin.getDepthWidth()+xi;
 		guiControl.txaWrite("Entfernung zum Sensor: "+depth[i]*100+" cm");
 		}
+
 	}
 
 	public void saveRGB() {
 		this.saveRGB = true;
 		
+	}
+
+	public void setDepthLayersActive(Boolean b) {
+		this.depthLayersActive = b;
+		if(menuController!=null){
+			menuController.setTogglebtns(b);		
+		}
+			
+	}
+
+	public void setGradientBeginning(int value) {
+		this.gradientBeginning = value/1000.0f;
 	}
 }

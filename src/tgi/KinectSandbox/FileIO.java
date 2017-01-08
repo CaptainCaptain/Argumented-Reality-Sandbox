@@ -14,10 +14,8 @@ import javafx.scene.paint.Color;
 public class FileIO {
 
 	private File settingsFile;
-	private int layers2D;
 
-	public FileIO(int layers2D){
-		this.layers2D = layers2D;
+	public FileIO(){
 		settingsFile = new File("settings.kek");
 		if (!settingsFile.exists()) {
 			try {
@@ -45,6 +43,10 @@ public class FileIO {
 			bw.write(data.getLineColor()+";"+data.getLineDistance()+";"+data.getLineWidth()+";"+data.getLineActive()+";");
 			bw.newLine();
 			bw.write(data.getDisplay()+";"+data.getDisplayBoundX() +";"+data.getDisplayBoundY()+";"+data.getFullscreen()+";");
+			bw.newLine();
+			bw.write(data.getDepthLayersActive()+";");
+			bw.newLine();
+			bw.write(data.getGradientBeginning()+";");
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -80,7 +82,7 @@ public class FileIO {
 				
 				values = result.split(";");
 				Color lineColor = Color.valueOf(values[0]);
-				float lineValue = Float.valueOf(values[1]);
+				float lineDistance = Float.valueOf(values[1]);
 				float lineWidth = Float.valueOf(values[2]);
 				boolean lineActive = Boolean.valueOf(values[3]);
 				
@@ -92,8 +94,20 @@ public class FileIO {
 				double displayBoundY = Double.valueOf(values[2]);
 				boolean fullscreen = Boolean.valueOf(values[3]);
 				
+				result = br.readLine();
+				
+				values = result.split(";");
+				
+				Boolean layersActive = Boolean.valueOf(values[0]);
+				
+				result = br.readLine();
+				
+				values = result.split(";");
+				
+				float gradientBeginning = Float.valueOf(values[0]);
+				
 				br.close();
-				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineValue, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen);
+				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen, layersActive, gradientBeginning);
 				return loadedData;
 			}
 			br.close();

@@ -90,9 +90,6 @@ public class GUI_Controller {
 	}
 	
 	public void setVboxContent(int canvesMode){
-		if (vBoxRight == null) {
-			System.out.println("mfw");
-		}
 		vBoxRight.getChildren().clear();
 		for (int i = 0; i < buttonArrays[canvesMode].length; i++) {
 			vBoxRight.getChildren().add(buttonArrays[canvesMode][i]);
@@ -129,13 +126,15 @@ public class GUI_Controller {
 			btnRGB[i] = new Button(btnRGBText[i]);
 			btnRGB[i].setUserData(10+i);
 			btnRGB[i].setPrefWidth(120.0);
+			btnRGB[i].setOnMouseClicked((MouseEvent e) ->{handleVariableButtons( (int) (( Node ) e.getSource()).getUserData());});
 		}
-		String[] btn2DText = {"--Placeholder--","--Placeholder--", "--Placeholder--"};
+		String[] btn2DText = {"3 Schichten Ansicht","Verlaufsansicht"};
 		Button[] btn2D = new Button [btn2DText.length];
 		for (int i = 0; i < btn2D.length; i++) {
 			btn2D[i] = new Button(btn2DText[i]);
 			btn2D[i].setUserData(20+i);
 			btn2D[i].setPrefWidth(120.0);
+			btn2D[i].setOnMouseClicked((MouseEvent e) ->{handleVariableButtons( (int) (( Node ) e.getSource()).getUserData());});
 		}
 		String[] btn3DText = {"--Placeholder--","--Placeholder--", "--Placeholder--"};
 		Button[] btn3D = new Button[btn3DText.length];
@@ -143,17 +142,19 @@ public class GUI_Controller {
 			btn3D[i] = new Button(btn3DText[i]);
 			btn3D[i].setUserData(30+i);
 			btn3D[i].setPrefWidth(120.0);
+			btn3D[i].setOnMouseClicked((MouseEvent e) ->{handleVariableButtons( (int) (( Node ) e.getSource()).getUserData());});
 		}
 		buttonArrays = new Button[4][];
 		buttonArrays[0] = btnCallibration; buttonArrays[1] = btnRGB; buttonArrays[2] = btn2D; buttonArrays[3] = btn3D;
 		
 		setVboxContent(0);
 		
-		canvas.widthProperty().bind(mainPane.widthProperty().subtract(5));
-		canvas.heightProperty().bind(mainPane.heightProperty().subtract(5));
+		canvas.widthProperty().bind(mainPane.widthProperty());
+		canvas.heightProperty().bind(mainPane.heightProperty());
 	}
 	
 	private void handleVariableButtons(int buttonID) {
+		System.out.println(buttonID);
 		switch (buttonID) {
 		case 0:
 			contPlus();
@@ -164,8 +165,14 @@ public class GUI_Controller {
 		case 2:
 			contReset();
 			break;
-		case 11:
+		case 10:
 			control.saveRGB();
+			break;
+		case 20:
+			control.setDepthLayersActive(true);
+			break;
+		case 21:
+			control.setDepthLayersActive(false);
 			break;
 		default:
 			System.out.println("Fehler im Switch Case Button Handeling!");

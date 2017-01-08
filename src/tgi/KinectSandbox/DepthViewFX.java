@@ -33,7 +33,6 @@ public class DepthViewFX extends Application{
 		this.displayWidth = (int) displayWidth;
 		this.kinectWidth = kinectWidth;
 		this.kinectHeight = kinectHeight;
-		System.out.println(kinectWidth);
 	}
 
 	@Override
@@ -60,7 +59,12 @@ public class DepthViewFX extends Application{
 	}
 
 	public void drawDepth(Image img){
-		g.drawImage(img, 0, 0, kinectWidth, kinectHeight);
+		if(fullscreen){
+			g.drawImage(img, 0, displayHeight,kinectWidth*(displayHeight/kinectHeight),-displayHeight);
+		}
+		else{
+			g.drawImage(img, 0, kinectHeight, kinectWidth, -kinectHeight);
+		}
 	}
 
 	public void setKinWidth(int pWidth){
@@ -79,7 +83,7 @@ public class DepthViewFX extends Application{
 	public int getWidth() {
 		return kinectWidth;
 	}
-	
+
 	public void setDisplay(double boundX, double boundY, double displayWidth, double displayHeight){
 		this.boundX = boundX;
 		this.boundY = boundY;
@@ -88,7 +92,7 @@ public class DepthViewFX extends Application{
 		depthStage.setX(boundX);
 		depthStage.setY(boundY);
 	}
-	
+
 	public void setFullscreen(boolean fullscreen){
 		this.fullscreen = fullscreen;
 		if (fullscreen) {
@@ -102,8 +106,7 @@ public class DepthViewFX extends Application{
 			canvas.setWidth(kinectWidth);
 			canvas.setHeight(kinectHeight);
 			depthStage.setWidth(kinectWidth);
-			depthStage.setHeight(kinectWidth);
-			System.out.println(kinectWidth);
+			depthStage.setHeight(kinectHeight);
 		}
 	}
 }

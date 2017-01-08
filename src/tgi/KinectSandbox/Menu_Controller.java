@@ -10,6 +10,8 @@ import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.ColorPicker;
 import javafx.scene.control.Spinner;
 import javafx.scene.control.SpinnerValueFactory;
+import javafx.scene.control.ToggleButton;
+import javafx.scene.control.ToggleGroup;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 
@@ -41,8 +43,20 @@ public class Menu_Controller {
 	private VBox lineVbox;
 	@FXML
 	private CheckBox cbFullscreen;
+	@FXML
+	private ToggleButton tglbGradient;
+	@FXML
+	private ToggleButton tglbLayers;
+	@FXML
+	private VBox vBoxSteps;
+	@FXML
+	private VBox vBoxGradient;
+	@FXML
+	private Spinner<Integer> spGradientBeginning;
 
 	private Control control;
+	
+	private final ToggleGroup tglbGroup = new ToggleGroup();
 
 	public Menu_Controller(Control control) {
 		this.control = control;
@@ -71,6 +85,15 @@ public class Menu_Controller {
 		distances[1] = spMiddle.getValue();
 		distances[2] = spFar.getValue();
 	}
+	
+	@FXML
+	private void tglbGradientClicked(ActionEvent e){
+		control.setDepthLayersActive(false);
+	}
+	@FXML
+	private void tglbLayersClicked(ActionEvent e){
+		control.setDepthLayersActive(true);
+	}
 
 	public void setCpBoxes(Color[] colors) {
 		cpClose.setValue(colors[0]);
@@ -82,11 +105,59 @@ public class Menu_Controller {
 		cbDisplay.getItems().setAll(list);
 	}
 
-	@FXML
-	private void cbDisplayEvent() {
-		System.out.println("Changed");
+	private void sendMinDistances() {
+		int[] distances = new int[3];
+		distances[0] = spClose.getValue();
+		distances[1] = spMiddle.getValue();
+		distances[2] = spFar.getValue();
+		control.setMinDistances(distances);
+
 	}
 
+	private void setVboxLine(Boolean active) {
+		lineVbox.setDisable(!active);
+		control.setLineActive(active);
+	}
+
+	public void setSpValues(int[] distances, int gradiantBeginning) {
+		spClose.setValueFactory(
+				new SpinnerValueFactory.IntegerSpinnerValueFactory(80, spMiddle.getValue() - 1, distances[0]));
+		spMiddle.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spClose.getValue() + 1,
+				spFar.getValue() - 1, distances[1]));
+		spFar.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spMiddle.getValue() + 1,
+				Integer.MAX_VALUE, distances[2]));
+		spGradientBeginning.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, gradiantBeginning));
+	}
+
+	public void setLine(Boolean lineActive, Color lineColor, float lineWidth, float lineDistance) {
+		cbLineActive.setSelected(lineActive);
+		cpLine.setValue(lineColor);
+		int lineWidthInt = (int) (lineWidth*100);
+		spLineWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 200, lineWidthInt));
+		int lineDistanceInt = (int) (lineDistance*100);
+		spLineDistance.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 200, lineDistanceInt));
+	}
+
+	public void setCbFullscreenActive(Boolean fullscreen) {
+		cbFullscreen.setSelected(fullscreen);
+	}
+
+	public void setDisplayChoise(int display) {
+		cbDisplay.getSelectionModel().select(display);
+	}
+	
+	public void setTogglebtns(Boolean layersActive){
+		if(layersActive){
+			tglbGroup.selectToggle(tglbLayers);
+			vBoxGradient.setVisible(false);
+			vBoxSteps.setVisible(true);
+		} else{
+			tglbGroup.selectToggle(tglbGradient);
+			vBoxSteps.setVisible(false);
+			vBoxGradient.setVisible(true);
+		}
+	}
+	
 	@FXML
 	public void initialize() {
 		spClose.valueProperty().addListener((obs, oldValue, newValue) -> {
@@ -110,13 +181,17 @@ public class Menu_Controller {
 		});
 		
 		spLineWidth.valueProperty().addListener((obs, oldValue, newValue) -> {
-			float floatValue = newValue/100.0f;
+			float floatValue = newValue/1000.0f;
 			control.setLineWidth(floatValue);
 		});
 		
 		spLineDistance.valueProperty().addListener((obs, oldValue, newValue) -> {
-			float floatValue = newValue/10.0f;
+			float floatValue = newValue/1000.0f;
 			control.setLineDistance(floatValue);
+		});
+		
+		spGradientBeginning.valueProperty().addListener((obs, oldValue, newValue) -> {
+			control.setGradientBeginning(newValue);
 		});
 		
 		cbLineActive.selectedProperty().addListener(new ChangeListener<Boolean>() {
@@ -141,46 +216,13 @@ public class Menu_Controller {
 				control.setFullscreen(newValue);			
 			}
 		});
-	}
-
-	private void sendMinDistances() {
-		int[] distances = new int[3];
-		distances[0] = spClose.getValue();
-		distances[1] = spMiddle.getValue();
-		distances[2] = spFar.getValue();
-		control.setMinDistances(distances);
-
-	}
-
-	private void setVboxLine(Boolean active) {
-		lineVbox.setDisable(!active);
-		control.setLineActive(active);
-	}
-
-	public void setSpValues(int[] distances) {
-		spClose.setValueFactory(
-				new SpinnerValueFactory.IntegerSpinnerValueFactory(80, spMiddle.getValue() - 1, distances[0]));
-		spMiddle.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spClose.getValue() + 1,
-				spFar.getValue() - 1, distances[1]));
-		spFar.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spMiddle.getValue() + 1,
-				Integer.MAX_VALUE, distances[2]));
-	}
-
-	public void setLine(Boolean lineActive, Color lineColor, float lineWidth, float lineDistance) {
-		cbLineActive.setSelected(lineActive);
-		cpLine.setValue(lineColor);
-		int lineWidthInt = (int) (lineWidth*100);
-		spLineWidth.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 200, lineWidthInt));
-		int lineDistanceInt = (int) (lineDistance*100);
-		spLineDistance.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 200, lineDistanceInt));
-	}
-
-	public void setCbFullscreenActive(Boolean fullscreen) {
-		cbFullscreen.setSelected(fullscreen);
-	}
-
-	public void setDisplayChoise(int display) {
-		cbDisplay.getSelectionModel().select(display);
+		
+		if(tglbGradient == null){
+			System.out.println("button null");
+		}
+		tglbGradient.setToggleGroup(tglbGroup);
+		tglbLayers.setToggleGroup(tglbGroup);
+		
 	}
 
 }

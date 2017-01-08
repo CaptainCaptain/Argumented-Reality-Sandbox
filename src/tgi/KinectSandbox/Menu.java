@@ -25,10 +25,9 @@ public class Menu extends Application {
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("GUI_Menu.fxml"));
 				loader.setController(menuController);
 				menuScene = loader.load();
-				mainMenuScene = new Scene(menuScene, 550, 650);
+				mainMenuScene = new Scene(menuScene, 608, 670);
 				menuStage.setScene(mainMenuScene);
-				menuStage.setMinHeight(650);
-				menuStage.setMinWidth(550);
+				menuStage.setResizable(false);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}

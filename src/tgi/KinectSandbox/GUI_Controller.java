@@ -1,6 +1,10 @@
 package tgi.KinectSandbox;
 
+import java.io.File;
+
 import javafx.application.Platform;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
@@ -149,8 +153,31 @@ public class GUI_Controller {
 		
 		setVboxContent(0);
 		
+		
 		canvas.widthProperty().bind(mainPane.widthProperty());
 		canvas.heightProperty().bind(mainPane.heightProperty());
+		
+		canvas.heightProperty().addListener(new ChangeListener<Number>(
+				) {
+					@Override
+					public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+							Number newValue) {
+						control.canvasSizeChanged();
+						
+					}
+		});
+		
+		canvas.widthProperty().addListener(new ChangeListener<Number>(
+				) {
+					@Override
+					public void changed(ObservableValue<? extends Number> observable, Number oldValue,
+							Number newValue) {
+						control.canvasSizeChanged();
+						
+					}
+		});
+		
+		
 	}
 	
 	private void handleVariableButtons(int buttonID) {
@@ -183,8 +210,10 @@ public class GUI_Controller {
 	public void txaWrite(String txt){
 		txaBottom.appendText(txt+"\n");
 	}
+	
 		
 	public GUI_Controller(){
 		this.control = new Control(this);
 	}
+
 }

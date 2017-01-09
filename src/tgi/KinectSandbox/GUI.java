@@ -1,6 +1,8 @@
 package tgi.KinectSandbox;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.EventHandler;
@@ -32,6 +34,12 @@ public class GUI extends Application{
 		try {
 			rootScene = FXMLLoader.load(getClass().getResource("GUI.fxml"));
 			mainScene = new Scene(rootScene, 600, 400);
+			try {
+				mainScene.getStylesheets().add(this.getClass().getResource("style.css").toURI().toString());
+			} catch (URISyntaxException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			primaryStage.setScene(mainScene);
 			primaryStage.setMinHeight(400);
 			primaryStage.setMinWidth(600);

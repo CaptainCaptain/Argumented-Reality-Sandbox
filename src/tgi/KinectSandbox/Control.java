@@ -50,8 +50,9 @@ public class Control {
 	private VirtualKinect virtKin;
 	private float[] depth;
 	private boolean saveRGB;
-	private boolean canvasActive;
+	private boolean canvasSensorModeActive;
 	private float gradientBeginning;
+	private Image logoSplashScreen;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -62,7 +63,9 @@ public class Control {
 		this.irContrastValue = 10;
 		this.rgbOn = false;
 		this.menuActivated = false;
-		this.canvasActive=false;
+		this.canvasSensorModeActive=false;
+		File splashScreen = new File("ARBox.jpg");
+		this.logoSplashScreen = new Image(splashScreen.toURI().toString());
 		try {
 			SaveData recivedData = fileIO.load();
 			this.color2D = recivedData.getColor();
@@ -118,8 +121,7 @@ public class Control {
 		this.displayWidth = gd[display].getDefaultConfiguration().getBounds().getWidth();
 		this.displayHeight = gd[display].getDefaultConfiguration().getBounds().getHeight();
 
-//		 this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
-
+		//		 this.virtKin = new VirtualKinect(this); //Virtuelle Kinect, wenn Felix mal wieder die Kinect daheim hat 
 	}
 
 	public void start() {
@@ -135,8 +137,8 @@ public class Control {
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		this.canvasActive = true;
-//		this.virtKin.start(); //starten der Virtuellen Kinect
+		this.canvasSensorModeActive = true;
+		//		this.virtKin.start(); //starten der Virtuellen Kinect
 	}
 
 	public void fillArray() {
@@ -269,6 +271,7 @@ public class Control {
 				FileChooser saver = new FileChooser();
 				saver.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG Datei (*.png)", "*.png"));
 				String saveLocation = System.getProperty("user.dir")+"/img";
+				saver.showSaveDialog(null);
 				File pictureFile = new File(saveLocation);
 				try {
 					ImageIO.write(bufImg, "png", pictureFile);
@@ -276,6 +279,7 @@ public class Control {
 				} catch (IOException e) {
 					guiControl.txaWrite("ein Fehler ist während des Speicherns aufgetreten!");
 				}
+				saveRGB = false;
 			}
 			if (mainCanvesMode != 1) {
 				kin.stop();
@@ -404,20 +408,20 @@ public class Control {
 		alert.show();
 
 	}
-	
+
 	public void canvasClicked(double x, double y, double canvasWidth, double canvasHeight){//Fehlerhaft?
-		if(canvasActive){
-		int xi = (int) (kin.getDepthWidth()*(x/canvasWidth));
-		int yi = (int) (kin.getDepthHeight()*(y/canvasHeight));
-		int i = yi*kin.getDepthWidth()+xi;
-		guiControl.txaWrite("Entfernung zum Sensor: "+depth[i]*100+" cm");
+		if(canvasSensorModeActive){
+			int xi = (int) (kin.getDepthWidth()*(x/canvasWidth));
+			int yi = (int) (kin.getDepthHeight()*(y/canvasHeight));
+			int i = yi*kin.getDepthWidth()+xi;
+			guiControl.txaWrite("Entfernung zum Sensor: "+depth[i]*100+" cm");
 		}
 
 	}
 
 	public void saveRGB() {
 		this.saveRGB = true;
-		
+
 	}
 
 	public void setDepthLayersActive(Boolean b) {
@@ -425,10 +429,16 @@ public class Control {
 		if(menuController!=null){
 			menuController.setTogglebtns(b);		
 		}
-			
+
 	}
 
 	public void setGradientBeginning(int value) {
 		this.gradientBeginning = value/1000.0f;
+	}
+
+	public void canvasSizeChanged() {
+		if(!canvasSensorModeActive){
+			guiControl.drawImg(logoSplashScreen);
+		}
 	}
 }

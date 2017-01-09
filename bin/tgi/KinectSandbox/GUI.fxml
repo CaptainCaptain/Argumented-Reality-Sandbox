@@ -34,7 +34,7 @@
       </MenuBar>
    </top>
    <bottom>
-      <TextArea fx:id="txaBottom" editable="false" prefHeight="110.0" prefWidth="600.0" style="-fx-border-color: black; -fx-border-width: 2;" BorderPane.alignment="CENTER" />
+      <TextArea fx:id="txaBottom" editable="false" prefHeight="110.0" prefWidth="600.0" style=": black;" BorderPane.alignment="CENTER" />
    </bottom>
    <left>
       <VBox spacing="5.0" BorderPane.alignment="CENTER">

@@ -9,6 +9,7 @@ import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
 
@@ -27,6 +28,11 @@ public class GUI extends Application{
 	public void start(Stage primaryStage) throws Exception {
 		this.primaryStage = primaryStage;
 		this.primaryStage.setTitle("Kinect Sandbox");
+		try{
+		this.primaryStage.getIcons().add(new Image(getClass().getResourceAsStream("icon.jpg")));
+		}catch(Exception e){
+			
+		}
 		loadGUI();
 	}
 

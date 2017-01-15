@@ -1,7 +1,6 @@
 package tgi.KinectSandbox;
 
 import java.io.IOException;
-import java.net.URISyntaxException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;

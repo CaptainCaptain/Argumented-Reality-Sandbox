@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.1.10" icons="true" automaticImage="PNG">  
+  <object id="1" language="java" name="tgi.KinectSandbox.GUI_Controller" project="VR Box Mobile" 
+    file="/VR Box Mobile/src/tgi/KinectSandbox/GUI_Controller.java" binary="false" label="gui_Controller" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="439" y="0"/>    
+    <execution id="2">      
+      <position height="434" width="105" x="5" y="99"/>    
+    </execution>    
+    <execution id="5">      
+      <position height="21" width="7" x="54" y="344"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="21" width="7" x="54" y="374"/>    
+    </execution>    
+    <execution id="7">      
+      <position height="21" width="7" x="54" y="403"/>    
+    </execution>    
+    <execution id="8">      
+      <position height="21" width="7" x="54" y="437"/>    
+    </execution>    
+    <execution id="9">      
+      <position height="21" width="7" x="54" y="470"/>    
+    </execution>  
+  </object>  
+  <object id="10" language="java" name="tgi.KinectSandbox.Control" project="VR Box Mobile" 
+    file="/VR Box Mobile/src/tgi/KinectSandbox/Control.java" binary="false" label="control" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="695" y="0"/>    
+    <execution id="4">      
+      <position height="392" width="82" x="114" y="120"/>    
+    </execution>  
+  </object>  
+  <object id="26" language="java" name="tgi.KinectSandbox.DepthViewFX" project="VR Box Mobile" 
+    file="/VR Box Mobile/src/tgi/KinectSandbox/DepthViewFX.java" binary="false" label="depthViewFX" type="class" 
+    autoSize="true">    
+    <position height="-1" width="-1" x="593" y="0"/>    
+    <execution id="18">      
+      <position height="21" width="98" x="200" y="262"/>    
+    </execution>    
+    <execution id="20">      
+      <position height="21" width="98" x="200" y="301"/>    
+    </execution>  
+  </object>  
+  <object id="27" language="java" name="tgi.KinectSandbox.Kinect" project="VR Box Mobile" 
+    file="/VR Box Mobile/src/tgi/KinectSandbox/Kinect.java" binary="false" label="kinect" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="598" y="0"/>    
+    <execution id="12">      
+      <position height="21" width="82" x="302" y="141"/>    
+    </execution>    
+    <execution id="14">      
+      <position height="21" width="82" x="302" y="183"/>    
+    </execution>    
+    <execution id="16">      
+      <position height="21" width="82" x="302" y="222"/>    
+    </execution>  
+  </object>  
+  <message id="3" operation="start():void" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="11" operation="setDepthResolution(int,int):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="setColorResolution(int,int):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="15" operation="start(int):boolean" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="16"/>  
+  </message>  
+  <message id="17" operation="DepthViewFX(double,double,boolean,double,double,int,int)" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="18"/>  
+  </message>  
+  <message id="19" operation="start(javafx.stage.Stage):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="20"/>  
+  </message>  
+  <message id="21" operation="btnStartSetText(java.lang.String):void" asynchronous="false" x="10" y="316">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="5"/>  
+  </message>  
+  <message id="22" operation="setBtn2DActive(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="23" operation="setBtnCalliActive(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="7"/>  
+  </message>  
+  <message id="24" operation="setBtnRGBActive(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="25" operation="setVboxDisabled(boolean):void" asynchronous="false">    
+    <end type="SOURCE" refId="4"/>    
+    <end type="TARGET" refId="9"/>  
+  </message>
+</sequence-diagram>

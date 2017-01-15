@@ -58,7 +58,7 @@ public class DepthViewFX extends Application{
 		depthStage.show();
 	}
 
-	public void drawDepth(Image img){
+	public void drawDepthAndImgs(Image img){
 		if(fullscreen){
 			g.drawImage(img, 0, displayHeight,kinectWidth*(displayHeight/kinectHeight),-displayHeight);
 		}

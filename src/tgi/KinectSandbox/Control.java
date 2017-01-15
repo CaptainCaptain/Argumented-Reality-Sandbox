@@ -4,18 +4,13 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import javax.imageio.ImageIO;
 
 import edu.ufl.digitalworlds.j4k.J4KSDK;
-import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -24,9 +19,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
-import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 public class Control {
@@ -55,7 +48,7 @@ public class Control {
 	private double displayWidth;
 	private double displayHeight;
 	private Boolean depthLayersActive;
-	private VirtualKinect virtKin;
+//	private VirtualKinect virtKin;
 	private float[] depth;
 	private boolean saveRGB;
 	private boolean canvasSensorModeActive;
@@ -171,6 +164,8 @@ public class Control {
 			guiControl.setBtnCalliActive(true);
 			guiControl.setBtnRGBActive(true);
 			guiControl.setVboxDisabled(true);
+			depthMap.drawDepthAndImgs(logoSplashScreen);
+			guiControl.drawImg(logoSplashScreen);
 		}
 	}
 
@@ -253,7 +248,7 @@ public class Control {
 		if (imgFX == null) {
 			System.out.println("2D Img null");
 		}
-		depthMap.drawDepth(imgFX);
+		depthMap.drawDepthAndImgs(imgFX);
 		if (mainCanvesMode == 2) {
 			guiControl.drawImg(imgFX);
 		}

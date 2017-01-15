@@ -210,12 +210,11 @@ public class Menu_Controller {
 		});
 		
 		cbDisplay.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Number>(){
-			@Override
-			public void changed(ObservableValue ov, Number oldValue, Number newValue) {
+			public void changed(ObservableValue<? extends Number> arg0, Number oldValue, Number newValue) {
 				if (newValue.intValue() >= 0) {
 					control.setDisplay(newValue.intValue());
 				}
-			}			
+			}		
 		});		cbDisplay.getSelectionModel().selectFirst();
 		
 		cbFullscreen.selectedProperty().addListener(new ChangeListener<Boolean>() {

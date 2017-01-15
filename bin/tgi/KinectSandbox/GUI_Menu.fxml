@@ -388,16 +388,6 @@
                   </AnchorPane>
                </content>
             </Tab>
-            <Tab text="3D Ansicht">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
-            <Tab text="RGB Ansicht">
-               <content>
-                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
-               </content>
-            </Tab>
          </tabs>
       </TabPane>
    </children>

@@ -100,6 +100,10 @@ public class GUI_Controller {
 		}
 	}
 	
+	public void setVboxDisabled(boolean b){
+		vBoxRight.setDisable(b);
+	}
+	
 	
 	private void contPlus(){
 		control.setIrContrast(control.getIrContrast()+5);
@@ -181,7 +185,6 @@ public class GUI_Controller {
 	}
 	
 	private void handleVariableButtons(int buttonID) {
-		System.out.println(buttonID);
 		switch (buttonID) {
 		case 0:
 			contPlus();
@@ -209,6 +212,20 @@ public class GUI_Controller {
 	
 	public void txaWrite(String txt){
 		txaBottom.appendText(txt+"\n");
+	}
+	
+	public void btnStartSetText(String text){
+		btnStart.setText(text);
+	}
+	
+	public void setBtnCalliActive(boolean b){
+		btnCali.setDisable(b);
+	}
+	public void setBtnRGBActive(boolean b){
+		btnRgbView.setDisable(b);
+	}
+	public void setBtn2DActive(boolean b){
+		btn2dView.setDisable(b);
 	}
 	
 		

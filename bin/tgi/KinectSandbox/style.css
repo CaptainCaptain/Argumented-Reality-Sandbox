@@ -16,9 +16,29 @@
 	-fx-border-color: black;
 	-fx-border-radius: 5;
 }
+
+.togglebutton{
+	-fx-background-color: rgb(50,50,50);
+	-fx-border-color: WHITE;
+}
+
+.togglebutton:selected{
+	-fx-background-color: WHITE;
+	-fx-text-fill: BLACK;
+}
 .menu-bar {
 	-fx-border-color: GRAY;
  }
  .text-area{
  	-fx-text-fill: white;
  }
+ 
+.spinner{
+	-fx-border-color: WHITE;
+	-fx-border-radius: 5px;
+}
+
+.color-picker{
+	-fx-border-color: WHITE;
+	-fx-border-radius: 5px;
+}

@@ -1,6 +1,7 @@
 package tgi.KinectSandbox;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -26,6 +27,7 @@ public class Menu extends Application {
 				loader.setController(menuController);
 				menuScene = loader.load();
 				mainMenuScene = new Scene(menuScene, 608, 670);
+				mainMenuScene.getStylesheets().add(this.getClass().getResource("style.css").toURI().toString());
 				menuStage.setScene(mainMenuScene);
 				menuStage.setResizable(false);
 			} catch (IOException e) {

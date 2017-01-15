@@ -7,20 +7,28 @@ import edu.ufl.digitalworlds.j4k.J4KSDK;
 public class Kinect extends J4KSDK{
 
 	private Control control;
+	private boolean selector;
 
 	public Kinect(Control pControl){
         super();
 		this.control = pControl;
+		this.selector = false;
 	}
 
 	@Override
 	public void onColorFrameEvent(byte[] data) {
+		if(selector){
 		control.sendColor(data);
+		selector = !selector;
+		}
 	}
 	@Override
 	public void onDepthFrameEvent(short[] depth_frame, byte[] body_index, float[] xyz, float[] uv) {
+		if(!selector){
         DepthMap map = new DepthMap(getDepthWidth(), getDepthHeight(), xyz);
 		control.sendDepth(map.realZ);
+		selector = !selector;
+		}
     }
 
 	@Override
@@ -32,7 +40,11 @@ public class Kinect extends J4KSDK{
 
 	@Override
 	public void onInfraredFrameEvent(short[] infrared){
-		control.sendInfared(infrared);
+		if(selector){
+			control.sendInfared(infrared);
+			selector = !selector;
+		}
+		
 	}
 
 }

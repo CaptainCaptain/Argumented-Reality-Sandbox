@@ -43,10 +43,9 @@
                <VBox.margin>
                   <Insets top="5.0" />
                </VBox.margin></Button>
-            <Button fx:id="btnCali" layoutX="10.0" layoutY="10.0" minWidth="120.0" mnemonicParsing="false" onAction="#calliView" text="Kallibrieren" />
-            <Button fx:id="btnRgbView" layoutX="10.0" layoutY="35.0" minWidth="120.0" mnemonicParsing="false" onAction="#rgbView" text="RGB Ansicht" />
-            <Button fx:id="btn2dView" layoutX="10.0" layoutY="70.0" minWidth="120.0" mnemonicParsing="false" onAction="#view2d" text="2D Ansicht" />
-            <Button fx:id="btn3dDiag" layoutX="10.0" layoutY="100.0" minWidth="120.0" mnemonicParsing="false" onAction="#rgbView" text="3D Diagramm" />
+            <Button fx:id="btnCali" disable="true" layoutX="10.0" layoutY="10.0" minWidth="120.0" mnemonicParsing="false" onAction="#calliView" text="Kallibrieren" />
+            <Button fx:id="btnRgbView" disable="true" layoutX="10.0" layoutY="35.0" minWidth="120.0" mnemonicParsing="false" onAction="#rgbView" text="RGB Ansicht" />
+            <Button fx:id="btn2dView" disable="true" layoutX="10.0" layoutY="70.0" minWidth="120.0" mnemonicParsing="false" onAction="#view2d" text="2D Ansicht" />
          </children>
          <opaqueInsets>
             <Insets />
@@ -54,7 +53,7 @@
       </VBox>
    </left>
    <right>
-      <VBox fx:id="vBoxRight" spacing="5.0" BorderPane.alignment="CENTER">
+      <VBox fx:id="vBoxRight" disable="true" spacing="5.0" BorderPane.alignment="CENTER">
          <BorderPane.margin>
             <Insets top="5.0" />
          </BorderPane.margin>

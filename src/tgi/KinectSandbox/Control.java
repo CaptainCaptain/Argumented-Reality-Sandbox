@@ -64,6 +64,7 @@ public class Control {
 	private float[] gradientEndValues = new float[4];
 	private Image logoSplashScreen;
 	private float gradientColorMultipicator;
+	private boolean kinActive;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -77,6 +78,7 @@ public class Control {
 		this.canvasSensorModeActive=false;
 		File splashScreen = new File("ARBox.jpg");
 		this.logoSplashScreen = new Image(splashScreen.toURI().toString());
+		this.kinActive=false;
 		try {
 			SaveData recivedData = fileIO.load();
 			this.color2D = recivedData.getColor();
@@ -141,20 +143,35 @@ public class Control {
 	}
 
 	public void start() {
-		kin.setDepthResolution(640, 480);
-		kin.setColorResolution(640, 480);
-		kin.start(J4KSDK.DEPTH | J4KSDK.INFRARED | J4KSDK.XYZ);
-		kin.setElevationAngle(0);
+		if(!kinActive){
+			kin.setDepthResolution(640, 480);
+			kin.setColorResolution(640, 480);
+			kin.start(J4KSDK.DEPTH | J4KSDK.INFRARED | J4KSDK.XYZ);
+//			kin.setElevationAngle(0);
 
-		Stage depthStage = new Stage();
-		this.depthMap = new DepthViewFX(displayBoundX, displayBoundY, fullscreen, displayWidth, displayHeight, kin.getDepthWidth(), kin.getDepthHeight());
-		try {
-			this.depthMap.start(depthStage);
-		} catch (Exception e) {
-			e.printStackTrace();
+			Stage depthStage = new Stage();
+			this.depthMap = new DepthViewFX(displayBoundX, displayBoundY, fullscreen, displayWidth, displayHeight, kin.getDepthWidth(), kin.getDepthHeight());
+			try {
+				this.depthMap.start(depthStage);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+			this.canvasSensorModeActive = true;
+			//		this.virtKin.start(); //starten der Virtuellen Kinect
+			guiControl.btnStartSetText("Stop");
+			guiControl.setBtn2DActive(false);
+			guiControl.setBtnCalliActive(false);
+			guiControl.setBtnRGBActive(false);
+			guiControl.setVboxDisabled(false);
+			kinActive = true;
+		}else{
+			kin.stop();
+			guiControl.btnStartSetText("Start");
+			guiControl.setBtn2DActive(true);
+			guiControl.setBtnCalliActive(true);
+			guiControl.setBtnRGBActive(true);
+			guiControl.setVboxDisabled(true);
 		}
-		this.canvasSensorModeActive = true;
-		//		this.virtKin.start(); //starten der Virtuellen Kinect
 	}
 
 	public void fillArray() {
@@ -463,11 +480,15 @@ public class Control {
 		this.gradientEnd = value/1000.0f;	
 		calculateGradientEndValuesAndMultiplicator();
 	}
-	
+
 	private void calculateGradientEndValuesAndMultiplicator(){
 		for (int i = 1; i < gradientEndValues.length+1; i++) {
 			this.gradientEndValues[i-1] = ((gradientEnd-gradientBeginning)/4.0f)*i;
 		}
 		this.gradientColorMultipicator = 255/((gradientEnd-gradientBeginning)/4);
+	}
+
+	public void stop() {
+		kin.stop();
 	}
 }

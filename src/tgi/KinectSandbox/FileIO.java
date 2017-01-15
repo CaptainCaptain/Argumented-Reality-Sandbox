@@ -46,7 +46,7 @@ public class FileIO {
 			bw.newLine();
 			bw.write(data.getDepthLayersActive()+";");
 			bw.newLine();
-			bw.write(data.getGradientBeginning()+";");
+			bw.write(data.getGradientBeginning()+";"+data.getGradientEnd());
 			bw.close();
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -105,9 +105,10 @@ public class FileIO {
 				values = result.split(";");
 				
 				float gradientBeginning = Float.valueOf(values[0]);
+				float gradientEnd = Float.valueOf(values[1]);
 				
 				br.close();
-				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen, layersActive, gradientBeginning);
+				SaveData loadedData = new SaveData(color, minDistance, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen, layersActive, gradientBeginning, gradientEnd);
 				return loadedData;
 			}
 			br.close();

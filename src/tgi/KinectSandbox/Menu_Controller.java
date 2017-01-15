@@ -53,6 +53,8 @@ public class Menu_Controller {
 	private VBox vBoxGradient;
 	@FXML
 	private Spinner<Integer> spGradientBeginning;
+	@FXML
+	private Spinner<Integer> spGradientEnd;
 
 	private Control control;
 	
@@ -119,14 +121,15 @@ public class Menu_Controller {
 		control.setLineActive(active);
 	}
 
-	public void setSpValues(int[] distances, int gradiantBeginning) {
+	public void setSpValues(int[] distances, int gradiantBeginning, int gradiantEnd) {
 		spClose.setValueFactory(
 				new SpinnerValueFactory.IntegerSpinnerValueFactory(80, spMiddle.getValue() - 1, distances[0]));
 		spMiddle.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spClose.getValue() + 1,
 				spFar.getValue() - 1, distances[1]));
 		spFar.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(spMiddle.getValue() + 1,
 				Integer.MAX_VALUE, distances[2]));
-		spGradientBeginning.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, Integer.MAX_VALUE, gradiantBeginning));
+		spGradientBeginning.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, gradiantEnd-1, gradiantBeginning));
+		spGradientEnd.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(gradiantBeginning, Integer.MAX_VALUE, gradiantEnd));
 	}
 
 	public void setLine(Boolean lineActive, Color lineColor, float lineWidth, float lineDistance) {
@@ -191,7 +194,12 @@ public class Menu_Controller {
 		});
 		
 		spGradientBeginning.valueProperty().addListener((obs, oldValue, newValue) -> {
+			spGradientEnd.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(newValue+1, Integer.MAX_VALUE, spGradientEnd.getValue()));
 			control.setGradientBeginning(newValue);
+		});
+		spGradientEnd.valueProperty().addListener((obs, oldValue, newValue) ->{
+			spGradientBeginning.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(1, spGradientEnd.getValue()-1, spGradientBeginning.getValue()));
+			control.setGradientEnd(newValue);
 		});
 		
 		cbLineActive.selectedProperty().addListener(new ChangeListener<Boolean>() {

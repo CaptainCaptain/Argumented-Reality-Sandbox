@@ -1,0 +1,24 @@
+.root{
+    -fx-font-family: "Verdana";
+    -fx-base: rgb(0, 0, 0);
+    -fx-background: WHITE;
+}
+.button{
+	-fx-background-color: rgb(50,50,50);
+	-fx-border-color: WHITE;
+    -fx-border-radius: 30;
+    -fx-background-radius: 30;
+    -fx-background-insets: 0;
+}
+.button:hover{
+	-fx-background-color: WHITE;
+	-fx-text-fill: BLACK;
+	-fx-border-color: black;
+	-fx-border-radius: 5;
+}
+.menu-bar {
+	-fx-border-color: GRAY;
+ }
+ .text-area{
+ 	-fx-text-fill: white;
+ }

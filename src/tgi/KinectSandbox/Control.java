@@ -4,11 +4,18 @@ import java.awt.GraphicsDevice;
 import java.awt.GraphicsEnvironment;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 import javax.imageio.ImageIO;
 
 import edu.ufl.digitalworlds.j4k.J4KSDK;
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.embed.swing.SwingFXUtils;
@@ -19,6 +26,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.Color;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
+import javafx.stage.Window;
 import javafx.stage.WindowEvent;
 
 public class Control {
@@ -52,7 +60,10 @@ public class Control {
 	private boolean saveRGB;
 	private boolean canvasSensorModeActive;
 	private float gradientBeginning;
+	private float gradientEnd;
+	private float[] gradientEndValues = new float[4];
 	private Image logoSplashScreen;
+	private float gradientColorMultipicator;
 
 	public Control(GUI_Controller gui_Controller) {
 		this.guiControl = gui_Controller;
@@ -105,6 +116,11 @@ public class Control {
 			if (this.gradientBeginning == 0.0f){
 				this.gradientBeginning = 0.8f;
 			}
+			this.gradientEnd = recivedData.getGradientEnd();
+			if(this.gradientEnd == 0.0f){
+				this.gradientEnd = 0.9f;
+			}
+			calculateGradientEndValuesAndMultiplicator();
 			this.display = recivedData.getDisplay();
 			this.displayBoundX = recivedData.getDisplayBoundX();
 			this.displayBoundY = recivedData.getDisplayBoundY();
@@ -185,31 +201,31 @@ public class Control {
 				for (int j = 8; j < dWidth; j++) {
 					int[] color = new int[3];
 					idx = i * dWidth + j;
-					if (depth[idx] % lineDistance < lineWidth && depth[idx] % lineDistance > -lineWidth && depth[idx]!= 0 && lineActive && depth[idx] < gradientBeginning + 0.4f) {
+					if (depth[idx] % lineDistance < lineWidth && depth[idx] % lineDistance > -lineWidth && depth[idx]!= 0 && lineActive && depth[idx] < gradientBeginning + gradientEndValues[3]) {
 						color[0] = (int) (lineColor.getRed() * 255);
 						color[1] = (int) (lineColor.getGreen() * 255);
 						color[2] = (int) (lineColor.getBlue() * 255);
 					}
-					else if(depth[idx]>= gradientBeginning + 0.4f){
+					else if(depth[idx]>= gradientBeginning + gradientEndValues[3]){
 						color[0]=0;
 						color[1]=0;
 						color[2]=0;
-					}else if(depth[idx]>= gradientBeginning + 0.3f){
+					}else if(depth[idx]>= gradientBeginning + gradientEndValues[2]){
 						color[0]=0;
-						color[1]=Math.min(255, (int) (255-(depth[idx] - gradientBeginning + 0.3f)*2550f));
+						color[1]=Math.min(255, (int) (255-(depth[idx] - gradientBeginning +gradientEndValues[2])*gradientColorMultipicator));
 						color[2]=255;
-					}else if ( depth[idx] >= gradientBeginning + 0.2f) {					
+					}else if ( depth[idx] >= gradientBeginning + gradientEndValues[1]) {					
 						color[0]=0;
 						color[1]=255;
-						color[2]=Math.max(0, (int) (((depth[idx] -gradientBeginning + 0.2f)*2550f)));
+						color[2]=Math.max(0, (int) (((depth[idx] -gradientBeginning + gradientEndValues[1])*gradientColorMultipicator)));
 					}
-					else if ( depth[idx] >= gradientBeginning + 0.1f) {					
-						color[0]=Math.min(255, (int) (255-(depth[idx] - gradientBeginning + 0.1f)*2550f));
+					else if ( depth[idx] >= gradientBeginning + gradientEndValues[0]) {					
+						color[0]=Math.min(255, (int) (255-(depth[idx] - gradientBeginning + gradientEndValues[0])*gradientColorMultipicator));
 						color[1]=255;
 						color[2]=0;				}
 					else if ( depth[idx] >= gradientBeginning) {					
 						color[0]=255;
-						color[1]=Math.max(0, (int) (((depth[idx] -gradientBeginning)*2550f)));
+						color[1]=Math.max(0, (int) (((depth[idx] -gradientBeginning)*gradientColorMultipicator)));
 						color[2]=0;
 					}
 					img.getRaster().setPixel(j, i, color);
@@ -268,16 +284,16 @@ public class Control {
 			Image imgFX = SwingFXUtils.toFXImage(bufImg, null);
 			guiControl.drawImg(imgFX);
 			if(saveRGB){
-				FileChooser saver = new FileChooser();
-				saver.getExtensionFilters().add(new FileChooser.ExtensionFilter("PNG Datei (*.png)", "*.png"));
-				String saveLocation = System.getProperty("user.dir")+"/img";
-				saver.showSaveDialog(null);
-				File pictureFile = new File(saveLocation);
-				try {
-					ImageIO.write(bufImg, "png", pictureFile);
-					guiControl.txaWrite("Speichern erfolgreich! Verzeichniss:");
-				} catch (IOException e) {
-					guiControl.txaWrite("ein Fehler ist während des Speicherns aufgetreten!");
+				try{
+					String timestamp = new SimpleDateFormat("yyyy MM dd-HH mm ss").format(new Date());
+					String fileName = System.getProperty("user.home")+"\\Pictures\\VR Box Screenshots\\"+timestamp;
+					File fileOut = new File(fileName+".png");
+					fileOut.getParentFile().mkdirs();
+					ImageIO.write(bufImg, "png", fileOut);
+					guiControl.txaWrite("Datei Gespeichert unter "+fileName+".png");
+				}catch(Exception e){
+					guiControl.txaWrite("Fehler beim Speichern des Screenshots!");
+					e.printStackTrace();
 				}
 				saveRGB = false;
 			}
@@ -339,7 +355,7 @@ public class Control {
 		}
 		if (menuController != null) {
 			menuController.setCpBoxes(color2D);
-			menuController.setSpValues(minDistances, (int) (gradientBeginning*1000));
+			menuController.setSpValues(minDistances, (int) (gradientBeginning*1000), (int) (gradientEnd*1000));
 			menuController.setLine(lineActive, lineColor, lineWidth*10, lineDistance);
 			menuController.cbDisplayAddChoise(monitorChoice);
 			menuController.setDisplayChoise(display);
@@ -359,7 +375,7 @@ public class Control {
 	}
 
 	private void saveSettings() {
-		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen, depthLayersActive, gradientBeginning);
+		SaveData dataToSave = new SaveData(color2D, minDistances, lineColor, lineDistance, lineWidth, lineActive, display, displayBoundX, displayBoundY, fullscreen, depthLayersActive, gradientBeginning, gradientEnd);
 		fileIO.save(dataToSave);
 	}
 
@@ -409,7 +425,7 @@ public class Control {
 
 	}
 
-	public void canvasClicked(double x, double y, double canvasWidth, double canvasHeight){//Fehlerhaft?
+	public void canvasClicked(double x, double y, double canvasWidth, double canvasHeight){//Fixed
 		if(canvasSensorModeActive){
 			int xi = (int) (kin.getDepthWidth()*(x/canvasWidth));
 			int yi = (int) (kin.getDepthHeight()*(y/canvasHeight));
@@ -434,11 +450,24 @@ public class Control {
 
 	public void setGradientBeginning(int value) {
 		this.gradientBeginning = value/1000.0f;
+		calculateGradientEndValuesAndMultiplicator();
 	}
 
 	public void canvasSizeChanged() {
 		if(!canvasSensorModeActive){
 			guiControl.drawImg(logoSplashScreen);
 		}
+	}
+
+	public void setGradientEnd(int value) {
+		this.gradientEnd = value/1000.0f;	
+		calculateGradientEndValuesAndMultiplicator();
+	}
+	
+	private void calculateGradientEndValuesAndMultiplicator(){
+		for (int i = 1; i < gradientEndValues.length+1; i++) {
+			this.gradientEndValues[i-1] = ((gradientEnd-gradientBeginning)/4.0f)*i;
+		}
+		this.gradientColorMultipicator = 255/((gradientEnd-gradientBeginning)/4);
 	}
 }

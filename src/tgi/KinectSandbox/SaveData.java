@@ -16,9 +16,10 @@ public class SaveData {
 	private boolean fullscreen;
 	private Boolean depthLayersActive;
 	private float gradientBeginning;
+	private float gradientEnd;
 
 	
-	public SaveData(Color[] color2d, int[] minDistances, Color lineColor, float lineDistance, float lineWidth, Boolean lineActive,int display, double displayBoundX, double displayBoundY, Boolean fullscreen, Boolean layersActive, float gradientBeginning) {
+	public SaveData(Color[] color2d, int[] minDistances, Color lineColor, float lineDistance, float lineWidth, Boolean lineActive,int display, double displayBoundX, double displayBoundY, Boolean fullscreen, Boolean layersActive, float gradientBeginning, float gradientEnd) {
 		this.color = color2d;
 		this.minDistance = minDistances;
 		this.line = lineColor;
@@ -31,6 +32,7 @@ public class SaveData {
 		this.fullscreen = fullscreen;
 		this.depthLayersActive = layersActive;
 		this.gradientBeginning = gradientBeginning;
+		this.gradientEnd = gradientEnd;
 	}
 
 	public void setColor(Color[] color){
@@ -81,6 +83,10 @@ public class SaveData {
 		this.gradientBeginning = gradientBeginning;
 	}
 	
+	public void setGradientEnd(float gradientEnd){
+		this.gradientEnd = gradientEnd;
+	}
+	
 	public Color[] getColor(){
 		return color;
 	}
@@ -127,6 +133,10 @@ public class SaveData {
 
 	public float getGradientBeginning() {
 		return gradientBeginning;
+	}
+
+	public float getGradientEnd() {
+		return gradientEnd;
 	}
 
 }

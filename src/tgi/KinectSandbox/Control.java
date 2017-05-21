@@ -48,7 +48,7 @@ public class Control {
 	private double displayWidth;
 	private double displayHeight;
 	private Boolean depthLayersActive;
-//	private VirtualKinect virtKin;
+	//	private VirtualKinect virtKin;
 	private float[] depth;
 	private boolean saveRGB;
 	private boolean canvasSensorModeActive;
@@ -93,11 +93,11 @@ public class Control {
 			}
 			this.lineDistance = recivedData.getLineDistance();
 			if (this.lineDistance == 0.0) {
-				this.lineDistance = 0.5f;
+				this.lineDistance = 0.05f;
 			}
 			this.lineWidth = recivedData.getLineWidth();
 			if (this.lineWidth == 0.0) {
-				this.lineWidth = 0.02f;
+				this.lineWidth = 0.002f;
 			}
 			this.lineActive = recivedData.getLineActive();
 			if (this.lineActive == null) {
@@ -139,24 +139,27 @@ public class Control {
 		if(!kinActive){
 			kin.setDepthResolution(640, 480);
 			kin.setColorResolution(640, 480);
-			kin.start(J4KSDK.DEPTH | J4KSDK.INFRARED | J4KSDK.XYZ);
-//			kin.setElevationAngle(0);
+			if(!kin.start(J4KSDK.DEPTH | J4KSDK.INFRARED | J4KSDK.XYZ)){
+				guiControl.txaWrite("Fehler beim Initialisieren des Kinect Sensors!\n Ist die Kinect angeschlossen und die Treiber instlliert?");
+			}else{
+				//			kin.setElevationAngle(0);
 
-			Stage depthStage = new Stage();
-			this.depthMap = new DepthViewFX(displayBoundX, displayBoundY, fullscreen, displayWidth, displayHeight, kin.getDepthWidth(), kin.getDepthHeight());
-			try {
-				this.depthMap.start(depthStage);
-			} catch (Exception e) {
-				e.printStackTrace();
+				Stage depthStage = new Stage();
+				this.depthMap = new DepthViewFX(displayBoundX, displayBoundY, fullscreen, displayWidth, displayHeight, kin.getDepthWidth(), kin.getDepthHeight());
+				try {
+					this.depthMap.start(depthStage);
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+				this.canvasSensorModeActive = true;
+				//		this.virtKin.start(); //starten der Virtuellen Kinect
+				guiControl.btnStartSetText("Stop");
+				guiControl.setBtn2DActive(false);
+				guiControl.setBtnCalliActive(false);
+				guiControl.setBtnRGBActive(false);
+				guiControl.setVboxDisabled(false);
+				kinActive = true;
 			}
-			this.canvasSensorModeActive = true;
-			//		this.virtKin.start(); //starten der Virtuellen Kinect
-			guiControl.btnStartSetText("Stop");
-			guiControl.setBtn2DActive(false);
-			guiControl.setBtnCalliActive(false);
-			guiControl.setBtnRGBActive(false);
-			guiControl.setVboxDisabled(false);
-			kinActive = true;
 		}else{
 			kin.stop();
 			guiControl.btnStartSetText("Start");
@@ -368,7 +371,7 @@ public class Control {
 		if (menuController != null) {
 			menuController.setCpBoxes(color2D);
 			menuController.setSpValues(minDistances, (int) (gradientBeginning*1000), (int) (gradientEnd*1000));
-			menuController.setLine(lineActive, lineColor, lineWidth*10, lineDistance);
+			menuController.setLine(lineActive, lineColor, lineWidth*10, lineDistance*10);
 			menuController.cbDisplayAddChoise(monitorChoice);
 			menuController.setDisplayChoise(display);
 			menuController.setCbFullscreenActive(fullscreen);
